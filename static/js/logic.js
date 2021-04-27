@@ -2,6 +2,24 @@
 
 // popup bind for map (Country Name & Score<hr>Rank)
 
+document.getElementById("button").addEventListener("click", function(e) {
+  let first = 10;
+  let second = 20;
+  fetch('http://127.0.0.1/add?a=' + first + '&b=' + second)
+    .then((response) => {
+      return response.json();
+    })
+    .then((myJson) => {
+      document.getElementById("demo").innerHTML = "When I add " + first + " and " + second + " I get: " + myJson.result;
+    }).catch((error) => {
+    	let fakeJSON = {
+        result: first + second
+      } // Only added to simulate
+      document.getElementById("demo").innerHTML = "When I add " + first + " and " + second + " I get: " + fakeJSON.result;
+    });
+});
+
+
 // Creating map object
 var myMap = L.map("map", {
     center: [34.0522, -118.2437],

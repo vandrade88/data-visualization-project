@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, func
 
 import simplejson as json
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, after_this_request
 
 
 # database setup
@@ -43,7 +43,6 @@ def welcome():
         f"/whr/2018<br/>"
         f"/whr/2017<br/>"
         f"/whr/2016<br/>"
-        # f"/api/v1.0/passengers"
     )
 
 
@@ -118,9 +117,13 @@ def r2016():
     return jsonify(results)
 
 
-@app.route("/whr/year/<year>")
+@app.route("/whr/year/<year>", methods=['POST','GET'])
 def year_selected(year):
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the data depending on year
@@ -149,7 +152,8 @@ def year_selected(year):
 #         passenger_dict["sex"] = sex
 #         all_passengers.append(passenger_dict)
 
-    return jsonify(results)
+    # return jsonify(results)
+    return json.dumps(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
