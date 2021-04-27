@@ -2,7 +2,7 @@
 
 // function for bar chart to be called for each year
 
-// function for Quick Info (Country Name & Score<hr>Rank, Population, GDP, Difference from Last Year/Next Year)
+// function for Quick Info (Country Name, Score, GDP, Social Support, Health life expectancy..etc
 
 // default settings (map and bar chart for 2021)
 

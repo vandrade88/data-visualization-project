@@ -1,6 +1,6 @@
 // leaflet map
 
-// popup bind for map (Country Name & Score<hr>Rank, Population, GDP, Difference from Last Year/Next Year)
+// popup bind for map (Country Name & Score<hr>Rank)
 
 // Creating map object
 var myMap = L.map("map", {
