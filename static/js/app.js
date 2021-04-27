@@ -1,7 +1,3 @@
-// leaflet map
-
-// popup bind for map (Country Name & Score<hr>Rank, Population, GDP, Difference from Last Year/Next Year)
-
 // dropdown function for year
 
 // function for bar chart to be called for each year
