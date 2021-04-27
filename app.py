@@ -1,8 +1,6 @@
-import numpy as np
-
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
-# from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, func
 
@@ -42,33 +40,83 @@ def welcome():
     return (
         f"Available Routes:<br/>"
         f"/whr/2020"
+        f"/whr/2019"
+        f"/whr/2018"
+        f"/whr/2017"
+        f"/whr/2015"
         # f"/api/v1.0/passengers"
     )
 
 
 @app.route("/whr/2020")
 def r2020():
-    # create our session (link) from python to the db
-    # session = Session(engine)
+    # create session from python to the db
     session = Session()
 
 
     # query the full table
     results = session.query(Whr2020.id, Whr2020.country, Whr2020.score, Whr2020.overall_rank, Whr2020.gdp_per_capita, Whr2020.social_support,\
         Whr2020.healthy_life_expectancy, Whr2020.freedom_to_make_life_choices, Whr2020.generosity, Whr2020.perceptions_of_corruption).all()
-    # results = session.query(whr2020).order_by(whr2020.score.desc()).all()
-    # results = engine.execute("SELECT * FROM whr2020")
-    # for r in results:
-    #     print(r)
+        # .order_by(Whr2020.score.desc())
 
     session.close()
 
-    # Convert list of tuples into normal list
-    # all_2020 = list(np.ravel(results))
+    return jsonify(results)
+
+@app.route("/whr/2019")
+def r2019():
+    # create session from python to the db
+    session = Session()
+
+
+    # query the full table
+    results = session.query(Whr2019.id, Whr2019.country, Whr2019.score, Whr2019.overall_rank, Whr2019.gdp_per_capita, Whr2019.social_support,\
+        Whr2019.healthy_life_expectancy, Whr2019.freedom_to_make_life_choices, Whr2019.generosity, Whr2019.perceptions_of_corruption).all()
+
+    session.close()
 
     return jsonify(results)
 
-    # return jsonify({"results": [dict(row) for row in results]})
+@app.route("/whr/2018")
+def r2018():
+    # create session from python to the db
+    session = Session()
+
+    # query the full table
+    results = session.query(Whr2018.id, Whr2018.country, Whr2018.score, Whr2018.overall_rank, Whr2018.gdp_per_capita, Whr2018.social_support,\
+        Whr2018.healthy_life_expectancy, Whr2018.freedom_to_make_life_choices, Whr2018.generosity, Whr2018.perceptions_of_corruption).all()
+
+    session.close()
+
+    return jsonify(results)
+
+@app.route("/whr/2017")
+def r2017():
+    # create session from python to the db
+    session = Session()
+
+
+    # query the full table
+    results = session.query(Whr2017.id, Whr2017.country, Whr2017.score, Whr2017.overall_rank, Whr2017.gdp_per_capita, Whr2017.social_support,\
+        Whr2017.healthy_life_expectancy, Whr2017.freedom_to_make_life_choices, Whr2017.generosity, Whr2017.trust, Whr2017.residual).all()
+
+    session.close()
+
+    return jsonify(results)
+
+@app.route("/whr/2016")
+def r2016():
+    # create session from python to the db
+    session = Session()
+
+
+    # query the full table
+    results = session.query(Whr2016.id, Whr2016.country, Whr2016.score, Whr2016.overall_rank, Whr2016.gdp_per_capita, Whr2016.social_support,\
+        Whr2016.healthy_life_expectancy, Whr2016.freedom_to_make_life_choices, Whr2016.generosity, Whr2016.trust).all()
+
+    session.close()
+
+    return jsonify(results)
 
 
 # @app.route("/api/v1.0/passengers")
