@@ -1,65 +1,71 @@
+DROP TABLE IF EXISTS whr2020;
+DROP TABLE IF EXISTS whr2019;
+DROP TABLE IF EXISTS whr2018;
+DROP TABLE IF EXISTS whr2017;
+DROP TABLE IF EXISTS whr2016;
+
 CREATE TABLE whr2020 (
 	id int PRIMARY KEY,
-	"Country" VARCHAR (75) NOT NULL,
-	"Score" NUMERIC NOT NULL,
-	"Overall Rank" INT NOT NULL,
-	"GDP per Capita" NUMERIC,
-	"Social Support" NUMERIC,
-	"Healthy Life Expectancy" NUMERIC,
-	"Freedom to Make Life Choices" NUMERIC,
-	"Generosity" NUMERIC,
-	"Perceptions of Corruption" NUMERIC
+	"country" VARCHAR (75) NOT NULL,
+	"score" NUMERIC NOT NULL,
+	"overall_rank" INT NOT NULL,
+	"gdp_per_capita" NUMERIC,
+	"social_support" NUMERIC,
+	"healthy_life_expectancy" NUMERIC,
+	"freedom_to_make_life_choices" NUMERIC,
+	"generosity" NUMERIC,
+	"perceptions_of_corruption" NUMERIC
 );
 
 CREATE TABLE whr2019 (
 	id int PRIMARY KEY,
-	"Country" VARCHAR (75) NOT NULL,
-	"Score" NUMERIC NOT NULL,
-	"Overall Rank" INT NOT NULL,
-	"GDP per Capita" NUMERIC,
-	"Social Support" NUMERIC,
-	"Healthy Life Expectancy" NUMERIC,
-	"Freedom to Make Life Choices" NUMERIC,
-	"Generosity" NUMERIC,
-	"Perceptions of Corruption" NUMERIC
+	"country" VARCHAR (75) NOT NULL,
+	"score" NUMERIC NOT NULL,
+	"overall_rank" INT NOT NULL,
+	"gdp_per_capita" NUMERIC,
+	"social_support" NUMERIC,
+	"healthy_life_expectancy" NUMERIC,
+	"freedom_to_make_life_choices" NUMERIC,
+	"generosity" NUMERIC,
+	"perceptions_of_corruption" NUMERIC
 );
 
 CREATE TABLE whr2018 (
 	id int PRIMARY KEY,
-	"Country" VARCHAR (75) NOT NULL,
-	"Score" NUMERIC NOT NULL,
-	"Overall Rank" INT NOT NULL,
-	"GDP per Capita" NUMERIC,
-	"Social Support" NUMERIC,
-	"Healthy Life Expectancy" NUMERIC,
-	"Freedom to Make Life Choices" NUMERIC,
-	"Generosity" NUMERIC,
-	"Perceptions of Corruption" NUMERIC
+	"country" VARCHAR (75) NOT NULL,
+	"score" NUMERIC NOT NULL,
+	"overall_rank" INT NOT NULL,
+	"gdp_per_capita" NUMERIC,
+	"social_support" NUMERIC,
+	"healthy_life_expectancy" NUMERIC,
+	"freedom_to_make_life_choices" NUMERIC,
+	"generosity" NUMERIC,
+	"perceptions_of_corruption" NUMERIC
 );
 
 CREATE TABLE whr2017 (
 	id int PRIMARY KEY,
-	"Country" VARCHAR (75) NOT NULL,
-	"Score" NUMERIC NOT NULL,
-	"Overall Rank" INT NOT NULL,
-	"GDP per Capita" NUMERIC,
-	"Social Support" NUMERIC,
-	"Healthy Life Expectancy" NUMERIC,
-	"Freedom to Make Life Choices" NUMERIC,
-	"Generosity" NUMERIC,
-	"Trust" NUMERIC,
-	"Residual" NUMERIC
+	"country" VARCHAR (75) NOT NULL,
+	"score" NUMERIC NOT NULL,
+	"overall_rank" INT NOT NULL,
+	"gdp_per_capita" NUMERIC,
+	"social_support" NUMERIC,
+	"healthy_life_expectancy" NUMERIC,
+	"freedom_to_make_life_choices" NUMERIC,
+	"generosity" NUMERIC,
+	"trust" NUMERIC,
+	"residual" NUMERIC
 );
 
 CREATE TABLE whr2016 (
 	id int PRIMARY KEY,
-	"Country" VARCHAR (75) NOT NULL,
-	"Score" NUMERIC NOT NULL,
-	"Overall Rank" INT NOT NULL,
-	"GDP per Capita" NUMERIC,
-	"Social Support" NUMERIC,
-	"Healthy Life Expectancy" NUMERIC,
-	"Freedom to Make Life Choices" NUMERIC,
-	"Generosity" NUMERIC,
-	"Trust" NUMERIC
+	"country" VARCHAR (75) NOT NULL,
+	"score" NUMERIC NOT NULL,
+	"overall_rank" INT NOT NULL,
+	"gdp_per_capita" NUMERIC,
+	"social_support" NUMERIC,
+	"healthy_life_expectancy" NUMERIC,
+	"freedom_to_make_life_choices" NUMERIC,
+	"generosity" NUMERIC,
+	"trust" NUMERIC
 );
