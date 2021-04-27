@@ -38,11 +38,11 @@ def welcome():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
-        f"/whr/2020"
-        f"/whr/2019"
-        f"/whr/2018"
-        f"/whr/2017"
-        f"/whr/2015"
+        f"/whr/2020<br/>"
+        f"/whr/2019<br/>"
+        f"/whr/2018<br/>"
+        f"/whr/2017<br/>"
+        f"/whr/2016<br/>"
         # f"/api/v1.0/passengers"
     )
 
@@ -118,30 +118,38 @@ def r2016():
     return jsonify(results)
 
 
-# @app.route("/whr/<year>")
-# def year_selected(year):
-#     # create session from python to the db
-#     session = Session()
+@app.route("/whr/year/<year>")
+def year_selected(year):
+    # create session from python to the db
+    session = Session()
 
-# #     """Return a list of passenger data including the name, age, and sex of each passenger"""
-# #     # Query all passengers
-# #     results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
+    # query the data depending on year
+    if year == 2020:
+        results = session.query(Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
+    elif year == 2019:
+        results = session.query(Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
+    elif year == 2018:
+        results = session.query(Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
+    elif year == 2017:
+        results = session.query(Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
+    else:
+        results = session.query(Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
 
-#     # query the full table
-#     results = session.query(Whr2016.country), Whr2016.country).all()
+    # query the full table
+    # results = session.query(Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
 
-#     session.close()
+    session.close()
 
-# #     # Create a dictionary from the row data and append to a list of all_passengers
-# #     all_passengers = []
-# #     for name, age, sex in results:
-# #         passenger_dict = {}
-# #         passenger_dict["name"] = name
-# #         passenger_dict["age"] = age
-# #         passenger_dict["sex"] = sex
-# #         all_passengers.append(passenger_dict)
+#     # Create a dictionary from the row data and append to a list of all_passengers
+#     all_passengers = []
+#     for name, age, sex in results:
+#         passenger_dict = {}
+#         passenger_dict["name"] = name
+#         passenger_dict["age"] = age
+#         passenger_dict["sex"] = sex
+#         all_passengers.append(passenger_dict)
 
-#     return jsonify(results)
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
