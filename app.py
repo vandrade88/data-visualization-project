@@ -10,7 +10,6 @@ from flask import Flask, jsonify
 
 
 # database setup
-# engine = create_engine("sqlite:///whr_db.sqlite")
 rds_connection_string = "postgres:postgres@localhost:5432/whr_db"
 engine = create_engine(f'postgresql://{rds_connection_string}')
 
@@ -19,11 +18,11 @@ session = Session()
 
 # reflect an existing database into a new model
 Base = automap_base()
+
 # reflect the tables
 Base.prepare(engine, reflect=True)
-# Base.prepare()
 
-# Save reference to the table
+# save references to the tables
 Whr2020 = Base.classes.whr2020
 Whr2019 = Base.classes.whr2019
 Whr2018 = Base.classes.whr2018
@@ -53,7 +52,6 @@ def r2020():
     # create session from python to the db
     session = Session()
 
-
     # query the full table
     results = session.query(Whr2020.id, Whr2020.country, Whr2020.score, Whr2020.overall_rank, Whr2020.gdp_per_capita, Whr2020.social_support,\
         Whr2020.healthy_life_expectancy, Whr2020.freedom_to_make_life_choices, Whr2020.generosity, Whr2020.perceptions_of_corruption).all()
@@ -67,7 +65,6 @@ def r2020():
 def r2019():
     # create session from python to the db
     session = Session()
-
 
     # query the full table
     results = session.query(Whr2019.id, Whr2019.country, Whr2019.score, Whr2019.overall_rank, Whr2019.gdp_per_capita, Whr2019.social_support,\
@@ -95,7 +92,6 @@ def r2017():
     # create session from python to the db
     session = Session()
 
-
     # query the full table
     results = session.query(Whr2017.id, Whr2017.country, Whr2017.score, Whr2017.overall_rank, Whr2017.gdp_per_capita, Whr2017.social_support,\
         Whr2017.healthy_life_expectancy, Whr2017.freedom_to_make_life_choices, Whr2017.generosity, Whr2017.trust, Whr2017.residual).all()
@@ -108,7 +104,6 @@ def r2017():
 def r2016():
     # create session from python to the db
     session = Session()
-
 
     # query the full table
     results = session.query(Whr2016.id, Whr2016.country, Whr2016.score, Whr2016.overall_rank, Whr2016.gdp_per_capita, Whr2016.social_support,\
