@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS whr2017;
 DROP TABLE IF EXISTS whr2016;
 
 CREATE TABLE whr2020 (
-	id int PRIMARY KEY,
+	id INT PRIMARY KEY,
+	"year" INT NOT NULL,
 	"country" VARCHAR (75) NOT NULL,
 	"score" NUMERIC NOT NULL,
 	"overall_rank" INT NOT NULL,
@@ -18,7 +19,8 @@ CREATE TABLE whr2020 (
 );
 
 CREATE TABLE whr2019 (
-	id int PRIMARY KEY,
+	id INT PRIMARY KEY,
+	"year" INT NOT NULL,
 	"country" VARCHAR (75) NOT NULL,
 	"score" NUMERIC NOT NULL,
 	"overall_rank" INT NOT NULL,
@@ -31,7 +33,8 @@ CREATE TABLE whr2019 (
 );
 
 CREATE TABLE whr2018 (
-	id int PRIMARY KEY,
+	id INT PRIMARY KEY,
+	"year" INT NOT NULL,
 	"country" VARCHAR (75) NOT NULL,
 	"score" NUMERIC NOT NULL,
 	"overall_rank" INT NOT NULL,
@@ -44,7 +47,8 @@ CREATE TABLE whr2018 (
 );
 
 CREATE TABLE whr2017 (
-	id int PRIMARY KEY,
+	id INT PRIMARY KEY,
+	"year" INT NOT NULL,
 	"country" VARCHAR (75) NOT NULL,
 	"score" NUMERIC NOT NULL,
 	"overall_rank" INT NOT NULL,
@@ -58,7 +62,8 @@ CREATE TABLE whr2017 (
 );
 
 CREATE TABLE whr2016 (
-	id int PRIMARY KEY,
+	id INT PRIMARY KEY,
+	"year" INT NOT NULL,
 	"country" VARCHAR (75) NOT NULL,
 	"score" NUMERIC NOT NULL,
 	"overall_rank" INT NOT NULL,
