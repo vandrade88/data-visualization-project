@@ -1,5 +1,3 @@
-var API_KEY = "pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA";
-
 // leaflet map
 
 // popup bind for map (Country Name & Score<hr>Rank)
@@ -10,9 +8,9 @@ var API_KEY = "pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwen
 //     console.log(data)
 
 // Creating map object
-var myMap = L.map("map", {
-    center: [34.0522, -118.2437],
-    zoom: 1
+var map = L.map("map", {
+    center: [34, 0],
+    zoom: 3
   });
 
   // Adding tile layer
@@ -25,20 +23,19 @@ var myMap = L.map("map", {
 //     accessToken: API_KEY
 // }).addTo(myMap);
 
-L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}", {
+L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
     zoomOffset: -1,
     id: "mapbox/streets-v11",
-    accessToken: API_KEY
-  }).addTo(myMap);
+  }).addTo(map);
   
   // Load in GeoJson data
 var geoData = "/../data/countries_geo.json";
 
-myMap.on('load', function() {
-  myMap.addLayer(
+map.on('load', function() {
+  map.addLayer(
     {
       id: 'country-boundaries',
       source: {
