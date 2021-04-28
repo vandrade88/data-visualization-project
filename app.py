@@ -46,75 +46,95 @@ def welcome():
     )
 
 
-@app.route("/whr/2020")
+@app.route("/whr/2020", methods=['POST','GET'])
 def r2020():
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the full table
-    results = session.query(Whr2020.id, Whr2020.country, Whr2020.score, Whr2020.overall_rank, Whr2020.gdp_per_capita, Whr2020.social_support,\
+    results = session.query(Whr2020.id, Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank, Whr2020.gdp_per_capita, Whr2020.social_support,\
         Whr2020.healthy_life_expectancy, Whr2020.freedom_to_make_life_choices, Whr2020.generosity, Whr2020.perceptions_of_corruption).all()
         # .order_by(Whr2020.score.desc())
 
     session.close()
 
-    return jsonify(results)
+    return json.dumps(results)
 
 
-@app.route("/whr/2019")
+@app.route("/whr/2019", methods=['POST','GET'])
 def r2019():
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the full table
-    results = session.query(Whr2019.id, Whr2019.country, Whr2019.score, Whr2019.overall_rank, Whr2019.gdp_per_capita, Whr2019.social_support,\
+    results = session.query(Whr2019.id, Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank, Whr2019.gdp_per_capita, Whr2019.social_support,\
         Whr2019.healthy_life_expectancy, Whr2019.freedom_to_make_life_choices, Whr2019.generosity, Whr2019.perceptions_of_corruption).all()
 
     session.close()
 
-    return jsonify(results)
+    return json.dumps(results)
 
 
-@app.route("/whr/2018")
+@app.route("/whr/2018", methods=['POST','GET'])
 def r2018():
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the full table
-    results = session.query(Whr2018.id, Whr2018.country, Whr2018.score, Whr2018.overall_rank, Whr2018.gdp_per_capita, Whr2018.social_support,\
+    results = session.query(Whr2018.id, Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank, Whr2018.gdp_per_capita, Whr2018.social_support,\
         Whr2018.healthy_life_expectancy, Whr2018.freedom_to_make_life_choices, Whr2018.generosity, Whr2018.perceptions_of_corruption).all()
 
     session.close()
 
-    return jsonify(results)
+    return json.dumps(results)
 
 
-@app.route("/whr/2017")
+@app.route("/whr/2017", methods=['POST','GET'])
 def r2017():
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the full table
-    results = session.query(Whr2017.id, Whr2017.country, Whr2017.score, Whr2017.overall_rank, Whr2017.gdp_per_capita, Whr2017.social_support,\
+    results = session.query(Whr2017.id, Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank, Whr2017.gdp_per_capita, Whr2017.social_support,\
         Whr2017.healthy_life_expectancy, Whr2017.freedom_to_make_life_choices, Whr2017.generosity, Whr2017.trust, Whr2017.residual).all()
 
     session.close()
 
-    return jsonify(results)
+    return json.dumps(results)
 
 
-@app.route("/whr/2016")
+@app.route("/whr/2016", methods=['POST','GET'])
 def r2016():
-    # create session from python to the db
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
     session = Session()
 
     # query the full table
-    results = session.query(Whr2016.id, Whr2016.country, Whr2016.score, Whr2016.overall_rank, Whr2016.gdp_per_capita, Whr2016.social_support,\
+    results = session.query(Whr2016.id, Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank, Whr2016.gdp_per_capita, Whr2016.social_support,\
         Whr2016.healthy_life_expectancy, Whr2016.freedom_to_make_life_choices, Whr2016.generosity, Whr2016.trust).all()
 
     session.close()
 
-    return jsonify(results)
+    return json.dumps(results)
 
 
 @app.route("/whr/year/<year>", methods=['POST','GET'])
@@ -128,15 +148,15 @@ def year_selected(year):
 
     # query the data depending on year
     if year == 2020:
-        results = session.query(Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
+        results = session.query(Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
     elif year == 2019:
-        results = session.query(Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
+        results = session.query(Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
     elif year == 2018:
-        results = session.query(Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
+        results = session.query(Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
     elif year == 2017:
-        results = session.query(Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
+        results = session.query(Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
     else:
-        results = session.query(Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
+        results = session.query(Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
 
     # query the full table
     # results = session.query(Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
