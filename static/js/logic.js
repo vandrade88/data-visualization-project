@@ -7,21 +7,11 @@
 // .then((data) => {
 //     console.log(data)
 
-// Creating map object
+// creating map object
 var map = L.map("map", {
-    center: [34, 0],
+    center: [30, -25],
     zoom: 3
-  });
-
-  // Adding tile layer
-// L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-//     maxZoom: 18,
-//     tileSize: 512,
-//     zoomOffset: -1,
-//     id: "mapbox/streets-v11",
-//     accessToken: API_KEY
-// }).addTo(myMap);
+  })
 
 L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -30,9 +20,6 @@ L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv
     zoomOffset: -1,
     id: "mapbox/streets-v11",
   }).addTo(map);
-  
-  // Load in GeoJson data
-var geoData = "/../data/countries_geo.json";
 
 map.on('load', function() {
   map.addLayer(
@@ -50,51 +37,69 @@ map.on('load', function() {
       },
     },
     'country-label'
-  );
-});
+)})
+// L.control.layers(baseLayers, overlays).addTo(Map);
 
-// L.control.layers(baseLayers, overlays).addTo(myMap);
+// call data from database
+function buildMap(year) {
+  const url = 'http://127.0.0.1:5000/map/' + year
+  fetch(url, {method:'POST'})
+  .then(response => response.json())  
+  .then(json => {
+      console.log(json);
+})}
+
+buildMap(2020);
+
+function callGeoData(year) {
+  const url = 'http://127.0.0.1:5000/map/' + year
+  fetch(url, {method:'POST'})
+  .then(response => response.json())  
+  .then(data => {
+    d3.json(data).then(function(data) {
+      console.log(data);
+      var geojson = L.choropleth(data, {
+        valueProperty: 'score',
+        scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
+        steps: 10, // number of breaks or steps in range
+        mode: 'q', // q for quantile, e for equidistant, k for k-means
+        style: {
+          color: '#fff', // border color
+          weight: 1,
+          fillOpacity: 0.8
+        },
+      }).addTo(map);
+    })
+})}
+
+callGeoData(2020);
+
+// function callData() {
+//   const url = 'http://127.0.0.1:5000/whr/' + year
+//   fetch(url, {method:'POST'})
+//   .then(response => response.json())  
+//   .then(json => {
+//       console.log(json);
+//       document.getElementById("demo").innerHTML = JSON.stringify(json)
+//   })
+// }
 
 
-// L.control.scale({
-//   maxWidth: 50}
-//   ).addTo(myMap);
+// d3.json(callData).then(function(data) {
+//   console.log(data);
+//   var geojson = L.choropleth(data, {
+//     valueProperty: 'score',
+//     scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
+//     steps: 10, // number of breaks or steps in range
+//     mode: 'q', // q for quantile, e for equidistant, k for k-means
+//     style: {
+//       color: '#fff', // border color
+//       weight: 1,
+//       fillOpacity: 0.8
+//     },
+//   }).addTo(map);
+// })
 
-//   map.on('load', function () {
-//     myMap.resize();
-// });
-  
-  // TODO:
-  
-  // // Grab data with d3
-  // d3.json(geoData).then(function(data) {
-  //   // Create a new choropleth layer
-  //   console.log(data);
-  //   var geojson = L.choropleth(data, {
-  
-  //     // Define what  property in the features to use
-  //     valueProperty: 'MHI2016', // which property in the features to use to determine color intensity/pattern
-  
-  //     // Set color scale
-  //     scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
-  
-  //     // Number of breaks in step range
-  //     steps: 10, // number of breaks or steps in range
-  
-  //     // q for quartile, e for equidistant, k for k-means
-  //     mode: 'q', // q for quantile, e for equidistant, k for k-means
-  //     style: {
-  //       color: '#fff', // border color
-  //       weight: 1,
-  //       fillOpacity: 0.8
-  //     },
-      
-  //     // Binding a pop-up to each layer
-  //     onEachFeature: function(feature, layer) {
-  //       layer.bindPopup(`${feature.properties.ADMIN}<hr>Happiness Score:${feature.properties.ADMIN}`)
-  
-  //     }
-  //   }).addTo(myMap);
   
   //   // Set up the legend
   //   var legend = L.control({ position: 'bottomleft' })

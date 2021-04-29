@@ -8,29 +8,19 @@ import simplejson as json
 
 from flask import Flask, jsonify, after_this_request
 
+from flask_pymongo import PyMongo
 
-# database setup
-rds_connection_string = "postgres:postgres@localhost:5432/whr_db"
-engine = create_engine(f'postgresql://{rds_connection_string}')
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# reflect an existing database into a new model
-Base = automap_base()
-
-# reflect the tables
-Base.prepare(engine, reflect=True)
-
-# save references to the tables
-Whr2020 = Base.classes.whr2020
-Whr2019 = Base.classes.whr2019
-Whr2018 = Base.classes.whr2018
-Whr2017 = Base.classes.whr2017
-Whr2016 = Base.classes.whr2016
+from bson import json_util
 
 # flask setup
 app = Flask(__name__)
+
+# mongo database setup
+app.config["MONGO_URI"] = "mongodb://localhost:27017/geojson"
+mongo = PyMongo(app)
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
 
 # flask routes
 @app.route("/")
@@ -43,8 +33,8 @@ def welcome():
         f"/whr/2018<br/>"
         f"/whr/2017<br/>"
         f"/whr/2016<br/>"
+        f"/whr/year/<year>"
     )
-
 
 @app.route("/whr/2020", methods=['POST','GET'])
 def r2020():
@@ -53,16 +43,11 @@ def r2020():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+    results = mongo.db.whr2020.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    # query the full table
-    results = session.query(Whr2020.id, Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank, Whr2020.gdp_per_capita, Whr2020.social_support,\
-        Whr2020.healthy_life_expectancy, Whr2020.freedom_to_make_life_choices, Whr2020.generosity, Whr2020.perceptions_of_corruption).all()
-        # .order_by(Whr2020.score.desc())
-
-    session.close()
-
-    return json.dumps(results)
+    return json.dumps(results_sorted)
 
 
 @app.route("/whr/2019", methods=['POST','GET'])
@@ -72,15 +57,11 @@ def r2019():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+    results = mongo.db.whr2019.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    # query the full table
-    results = session.query(Whr2019.id, Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank, Whr2019.gdp_per_capita, Whr2019.social_support,\
-        Whr2019.healthy_life_expectancy, Whr2019.freedom_to_make_life_choices, Whr2019.generosity, Whr2019.perceptions_of_corruption).all()
-
-    session.close()
-
-    return json.dumps(results)
+    return json.dumps(results_sorted)
 
 
 @app.route("/whr/2018", methods=['POST','GET'])
@@ -90,15 +71,11 @@ def r2018():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+    results = mongo.db.whr2018.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    # query the full table
-    results = session.query(Whr2018.id, Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank, Whr2018.gdp_per_capita, Whr2018.social_support,\
-        Whr2018.healthy_life_expectancy, Whr2018.freedom_to_make_life_choices, Whr2018.generosity, Whr2018.perceptions_of_corruption).all()
-
-    session.close()
-
-    return json.dumps(results)
+    return json.dumps(results_sorted)
 
 
 @app.route("/whr/2017", methods=['POST','GET'])
@@ -108,15 +85,11 @@ def r2017():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+    results = mongo.db.whr2017.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    # query the full table
-    results = session.query(Whr2017.id, Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank, Whr2017.gdp_per_capita, Whr2017.social_support,\
-        Whr2017.healthy_life_expectancy, Whr2017.freedom_to_make_life_choices, Whr2017.generosity, Whr2017.trust, Whr2017.residual).all()
-
-    session.close()
-
-    return json.dumps(results)
+    return json.dumps(results_sorted)
 
 
 @app.route("/whr/2016", methods=['POST','GET'])
@@ -126,15 +99,11 @@ def r2016():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+    results = mongo.db.whr2016.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    # query the full table
-    results = session.query(Whr2016.id, Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank, Whr2016.gdp_per_capita, Whr2016.social_support,\
-        Whr2016.healthy_life_expectancy, Whr2016.freedom_to_make_life_choices, Whr2016.generosity, Whr2016.trust).all()
-
-    session.close()
-
-    return json.dumps(results)
+    return json.dumps(results_sorted)
 
 
 @app.route("/whr/year/<year>", methods=['POST','GET'])
@@ -144,24 +113,39 @@ def year_selected(year):
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    session = Session()
+#     session = Session()
 
-    # query the data depending on year
-    if year == 2020:
-        results = session.query(Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
-    elif year == 2019:
-        results = session.query(Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
-    elif year == 2018:
-        results = session.query(Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
-    elif year == 2017:
-        results = session.query(Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
-    else:
-        results = session.query(Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
+#     # query the data depending on year
+#     if year == 2020:
+#         results = session.query(Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
+#     elif year == 2019:
+#         results = session.query(Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
+#     elif year == 2018:
+#         results = session.query(Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
+#     elif year == 2017:
+#         results = session.query(Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
+#     else:
+#         results = session.query(Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
 
-    # query the full table
-    # results = session.query(Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
+    results = mongo.db.whr2016.find({},\
+        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("score", -1))
 
-    session.close()
+    return json.dumps(results_sorted)
+
+@app.route("/map/2020", methods=['POST','GET'])
+def m2020():
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+    results = parse_json(mongo.db.countries.find({}))
+        # { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+
+    return json.dumps(results)
+
+#     session.close()
 
 #     # Create a dictionary from the row data and append to a list of all_passengers
 #     all_passengers = []
@@ -173,7 +157,7 @@ def year_selected(year):
 #         all_passengers.append(passenger_dict)
 
     # return jsonify(results)
-    return json.dumps(results)
+    # return json.dumps(results)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -17,7 +17,6 @@ function buildBarChart(year) {
         b.score - a.score);
 
         var slicedData = sortResults.slice(0,10);
-        console.log(`First 10: ${slicedData}`);
 
         var reversedData = slicedData.reverse();
 
