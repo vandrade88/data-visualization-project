@@ -9,6 +9,7 @@ import simplejson as json
 from flask import Flask, jsonify, after_this_request
 
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
 
 from bson import json_util
 
@@ -18,6 +19,10 @@ app = Flask(__name__)
 # mongo database setup
 app.config["MONGO_URI"] = "mongodb://localhost:27017/geojson"
 mongo = PyMongo(app)
+
+# connect to MongoDB, change the << MONGODB URL >> to reflect your own connection string
+client = MongoClient("mongodb://localhost:27017/geojson")
+db = client.mydb
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
@@ -43,11 +48,30 @@ def r2020():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.whr2020.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
+    # results = mongo.db.allyears.find({},\
+    #     { "country": 1, "2020_score": 1, "2020_rank": 1, "_id": 0 })
+    # results_sorted = parse_json(results.sort("2020_score", -1))
 
-    return json.dumps(results_sorted)
+    # results = parse_json(mongo.db.countries.find({},{"properties.ADMIN": 1, "geometry.coordinates": 1, "_id": 0}))
+    # # { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+
+    # return json.dumps(results)
+
+    results = parse_json(mongo.db.allyears.aggregate([
+        # {"$unwind": "$properties"
+        # },
+        {"$lookup":{
+            "from": "countries",       # other table name
+            "localField": "country",        # key field in collection 2
+            "foreignField": "properties.ADMIN",      # key field in collection 1
+            "as": "linked"   # alias for resulting table
+        }},
+        {"$sort":{
+            "score_2020": -1
+        }}
+    ]))
+    
+    return json.dumps(results)
 
 
 @app.route("/whr/2019", methods=['POST','GET'])
@@ -57,10 +81,9 @@ def r2019():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.whr2019.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
-
+    results = mongo.db.allyears.find({},\
+        { "country": 1, "2019_score": 1, "2019_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("2019_score", -1))
     return json.dumps(results_sorted)
 
 
@@ -71,9 +94,9 @@ def r2018():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.whr2018.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
+    results = mongo.db.allyears.find({},\
+        { "country": 1, "2018_score": 1, "2018_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("2018_score", -1))
 
     return json.dumps(results_sorted)
 
@@ -85,9 +108,9 @@ def r2017():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.whr2017.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
+    results = mongo.db.allyears.find({},\
+        { "country": 1, "2017_score": 1, "2017_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("2017_score", -1))
 
     return json.dumps(results_sorted)
 
@@ -99,9 +122,9 @@ def r2016():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.whr2016.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
+    results = mongo.db.allyears.find({},\
+        { "country": 1, "2016_score": 1, "2016_rank": 1, "_id": 0 })
+    results_sorted = parse_json(results.sort("2016_score", -1))
 
     return json.dumps(results_sorted)
 
@@ -127,11 +150,11 @@ def year_selected(year):
 #     else:
 #         results = session.query(Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
 
-    results = mongo.db.whr2016.find({},\
-        { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("score", -1))
+#     results = mongo.db.whr2016.find({},\
+#         { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+#     results_sorted = parse_json(results.sort("score", -1))
 
-    return json.dumps(results_sorted)
+#     return json.dumps(results_sorted)
 
 @app.route("/map/2020", methods=['POST','GET'])
 def m2020():
@@ -140,7 +163,7 @@ def m2020():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = parse_json(mongo.db.countries.find({}))
+    results = parse_json(mongo.db.countries.find({},{"properties.ADMIN": 1, "geometry.coordinates": 1, "_id": 0}))
         # { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
 
     return json.dumps(results)

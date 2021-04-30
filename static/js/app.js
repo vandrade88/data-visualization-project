@@ -6,25 +6,20 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
+    fetch('http://127.0.0.1:5000/whr/' + 2020, {method:'POST'})
     .then(response => response.json())
     .then((data) => {
         // console.log(data)
-        var id = data.filter(item => item.id == id);
-        id = id[0];
 
-        var sortResults = data.sort((a, b) =>
-        b.score - a.score);
-
-        var slicedData = sortResults.slice(0,10);
+        var slicedData = data.slice(0,10);
 
         var reversedData = slicedData.reverse();
 
         var barTrace = {
-            x: reversedData.map(item => item.score),
+            x: reversedData.map(item => item.score_2020),
             y: reversedData.map(item => item.country),
             type: "bar",
-            text: reversedData.map(item => item.score),
+            text: reversedData.map(item => item.score_2020),
             orientation: "h",
             textposition: 'auto',
             hoverinfo: 'none',
