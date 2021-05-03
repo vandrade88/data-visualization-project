@@ -7,7 +7,6 @@
 // .then((data) => {
 //     console.log(data)
 
-
 // map.on('load', function() {
 //   map.addLayer(
 //     {
@@ -35,34 +34,37 @@ function buildMap(year) {
     var countryMarkers = [];
     var countryPolygon = [];
 
-    for (var i = 0; i < data.length; i++) {
-      var linked = data.map(item => item.linked);
-      linked = linked[0];
-      // console.log(linked[0].geometry.coordinates);
+    var linked = data.map(item => item.linked);
+    var rank = data.map(item => item.rank_2020);
+    var score = data.map(item => item.score_2020);
+    linked = linked[0];
+    rank = rank[0];
+    score = score[0];
+    var coords = linked.map(item => item.geometry.coordinates)
+    var country = linked.map(item => item.properties.ADMIN)
+    country = country[0]
+    console.log(country)
+    console.log(coords)
 
-      if (linked) {
-        countryMarkers.push(
-          L.marker([linked[0].geometry.coordinates[1], linked[0].geometry.coordinates[0]]));
-        // countryPolygon.push(
-        //   L.marker([linked.geometry.coordinates[1], linked.geometry.coordinates[0]]));
+    // for (var i = 0; i <= coords.length; i++) {
+    //   coords.push(parseFloat(coords[1], parseFloat(coords[1])
+    // }
+
+    if (linked) {
+      countryMarkers.push(
+        L.marker([parseFloat(coords[0][1]), parseFloat(coords[0][0])]).bindPopup(`<h5>${country}</h5><hr><strong>Score:</strong> ${score}<br><strong>Rank:</strong> ${rank}/${data.length}`));
+      // countryPolygon.push(
+      //   L.marker([parseFloat(coords[0][1]), parseFloat(coords[0][0])]));
       }
-    }
       // countryMarkers.push(
       //   L.marker(linked[0].geometry.coordinates).bindPopup("<h1>" + linked[0].properties.ADMIN + "</h1>")
       // );
 // })
+  // loop through all the elements in the cities array
+    for (var i = 0; i <= countryMarkers.length; i++) {
+      var coords = coords[i];}
 
     var markerLayer = L.layerGroup(countryMarkers);
-
-    // var countryPolygon = [];
-
-    // for (var i = 0; i < data.length; i++) {
-    //   // loop through the cities array, create a new marker, push it to the cityMarkers array
-    //   countryPolygon.push(
-    //     L.marker(linked[0].geometry.coordinates)
-    //   );
-    // }
-
     var countryLayer = L.layerGroup(countryPolygon);
 
     var overlays = {
@@ -93,6 +95,15 @@ function buildMap(year) {
 
     console.log(countryMarkers)
     console.log(countryPolygon)
+
+    // var countryPolygon = [];
+
+    // for (var i = 0; i < data.length; i++) {
+    //   // loop through the cities array, create a new marker, push it to the cityMarkers array
+    //   countryPolygon.push(
+    //     L.marker(linked[0].geometry.coordinates)
+    //   );
+    // }
 
 })}
 
