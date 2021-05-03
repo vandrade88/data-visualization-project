@@ -59,7 +59,7 @@ def r2020():
 
     results = parse_json(mongo.db.allyears.aggregate([
         # {"$unwind": "$properties"
-        # },
+        # },pytho
         {"$lookup":{
             "from": "countries",       # other table name
             "localField": "country",        # key field in collection 2
