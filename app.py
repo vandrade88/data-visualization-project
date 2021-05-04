@@ -45,6 +45,7 @@ def welcome():
 def r2020():
     @after_this_request
     def add_header(response):
+        # response = flask.jsonify({'some': 'data'})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
@@ -129,7 +130,7 @@ def r2016():
     return json.dumps(results_sorted)
 
 
-@app.route("/whr/year/<year>", methods=['POST','GET'])
+@app.route("/whr/2020/<year>", methods=['POST','GET'])
 def year_selected(year):
     @after_this_request
     def add_header(response):

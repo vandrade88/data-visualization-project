@@ -31,38 +31,93 @@ function buildMap(year) {
   .then(response => response.json())
   .then(data => {
 
+    var linked = data.map(item => item.linked);
+    linked = linked[0];
+    console.log(linked);
+
+    linked.forEach(function(item){
+      var geom = item.geometry;
+      console.log(geom);
+      var props = item.properties;
+      console.log(props);
+
+      if (geom.type === 'MultiPolygon') {
+          for (var i=0; i < geom.coordinates.length; i++){
+              var polygon = {
+                  'type':'Polygon', 
+                  'coordinates':geom.coordinates[i],
+                  'properties': props};
+              console.log(JSON.stringify(polygon));
+
+              var countryPolygon = [];
+              countryPolygon.push(
+                L.polygon(polygon.coordinates));
+          }
+        }
+    });
+
+    // var linked = data.map(item => item.linked);
+    var geoDataLayer = L.geoJSON(linked)
+
     var countryMarkers = [];
     var countryPolygon = [];
 
-    var linked = data.map(item => item.linked);
+    // var linked = data.map(item => item.linked);
     var rank = data.map(item => item.rank_2020);
     var score = data.map(item => item.score_2020);
-    linked = linked[0];
+    // linked = linked[0];
+    // linked_new = JSON.stringify(linked)
+    // console.log(linked)
+    // console.log(JSON.stringify(linked));
     rank = rank[0];
     score = score[0];
-    var coords = linked.map(item => item.geometry.coordinates)
+    // var locations = linked.map(item => item.geometry.coordinates)
+    // var locationsNested = locations[i];
     var country = linked.map(item => item.properties.ADMIN)
-    country = country[0]
-    console.log(country)
-    console.log(coords)
+    // country = country[0]
+    // console.log(country)
+    // coords = coords[0]
+    // console.log(location)
 
-    // for (var i = 0; i <= coords.length; i++) {
-    //   coords.push(parseFloat(coords[1], parseFloat(coords[1])
-    // }
+      // for (var i = 0; i < feats.length; i++) {
+        // var coordsNew = [];
+        // var feat = feats[i];
+        // console.log(feat);
+        // coordsNew.push([feat['coordinates'][1], feat['coordinates'][0]]);
+        // countryPolygon.push(
+        //   L.polygon([coordsNew]));
+      // }
+  //   }
+  //  );
+  // });
 
-    if (linked) {
+  // for (var i = location.length - 1; i >= 0; i--) {
+  //   console.log([location[0], location[1]].reverse())
+  // }
+
+        // linked.forEach(function(item) {
+        // if (coord) {
+        //   countryPolygon.push(
+        //     L.polygon([coords, coords]));
+        // }
+      // }
+        // )};
+
+      // locations = [];
+      // locations.push(locations);
+      // console.log(JSON.stringify(locations));
+
+      // coords = JSON.parse(coords)
+      // console.log(coords)
+
+      // var latlng = L.latLng([coords[1], coords[0]]);
+      // console.log(latlng)
+
       countryMarkers.push(
-        L.marker([parseFloat(coords[0][1]), parseFloat(coords[0][0])]).bindPopup(`<h5>${country}</h5><hr><strong>Score:</strong> ${score}<br><strong>Rank:</strong> ${rank}/${data.length}`));
+        L.marker([61.9241, 25.7482]).bindPopup(`<h5>${country}</h5><hr><strong>Score:</strong> ${score}<br><strong>Rank:</strong> ${rank}/${data.length}`));
       // countryPolygon.push(
-      //   L.marker([parseFloat(coords[0][1]), parseFloat(coords[0][0])]));
-      }
-      // countryMarkers.push(
-      //   L.marker(linked[0].geometry.coordinates).bindPopup("<h1>" + linked[0].properties.ADMIN + "</h1>")
-      // );
-// })
-  // loop through all the elements in the cities array
-    for (var i = 0; i <= countryMarkers.length; i++) {
-      var coords = coords[i];}
+      //   L.polygon([coords, coords]));
+    // };
 
     var markerLayer = L.layerGroup(countryMarkers);
     var countryLayer = L.layerGroup(countryPolygon);
@@ -87,54 +142,30 @@ function buildMap(year) {
       layers: [worldMap, markerLayer, countryLayer]
     });
 
+    geoDataLayer.addTo(map);
     worldMap.addTo(map);
+
+    // d3.json(linked).then(function(data) {
+    //   var chroro = L.choropleth(data, {
+    //     valueProperty: 'score_2020',
+    //     scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
+    //     steps: 10, // number of breaks or steps in range
+    //     mode: 'q', // q for quantile, e for equidistant, k for k-means
+    //     style: {
+    //       color: '#fff', // border color
+    //       weight: 1,
+    //       fillOpacity: 0.8
+    //     },
+    //   }).addTo(map);
+    // })
 
     L.control.layers(null, overlays, {
       collapsed: false
     }).addTo(map);
-
-    console.log(countryMarkers)
-    console.log(countryPolygon)
-
-    // var countryPolygon = [];
-
-    // for (var i = 0; i < data.length; i++) {
-    //   // loop through the cities array, create a new marker, push it to the cityMarkers array
-    //   countryPolygon.push(
-    //     L.marker(linked[0].geometry.coordinates)
-    //   );
-    // }
-
-})}
-
-  //   var map_name_whr = [];
-  //   var country_whr = data.map(item => item.country);
-  //   map_name_whr.push("Finland");
-  //   console.log(map_name_whr);
-
-  //   var linked = data.map(item => item.linked);
-  //   linked = linked[0];
-  //   // console.log(linked);
-
-  //   var map_name_geo = [];
-  //   map_name_whr.forEach((item) => {
-  //     var chosen = data.filter(item => item.country_geo == "Finland")
-  //     var coords = 
-  //     map_name_geo.push(chosen);
+  })
+}
 
 
-  
-  //   for (var i = 0; i < linked.length; i++) {
-  //     var map_coords = [];
-
-  //     coords = linked[0].geometry.coordinates;
-  //     map_coords.push(coords);
-
-  //     country_geo = linked[0].properties.ADMIN;
-  //     console.log(map_name_geo);
-  //     console.log(map_coords)
-  //   }
-  // })
 buildMap(2020);
 
 // function callGeoData(year) {
