@@ -35,6 +35,17 @@ function buildMap(year) {
     linked = linked[0];
     console.log(linked);
 
+    // var linked = data.map(item => item.linked);
+    var geoDataLayer = L.geoJSON(linked)
+
+    var countryMarkers = [];
+    var countryPolygon = [];
+    var rank = data.map(item => item.rank_2020);
+    var score = data.map(item => item.score_2020);
+    rank = rank[0];
+    score = score[0];
+    var country = linked.map(item => item.properties.ADMIN)
+
     linked.forEach(function(item){
       var geom = item.geometry;
       console.log(geom);
@@ -43,89 +54,30 @@ function buildMap(year) {
 
       if (geom.type === 'MultiPolygon') {
           for (var i=0; i < geom.coordinates.length; i++){
+            locations = [];
               var polygon = {
                   'type':'Polygon', 
                   'coordinates':geom.coordinates[i],
                   'properties': props};
               console.log(JSON.stringify(polygon));
-
-              var countryPolygon = [];
-              countryPolygon.push(
-                L.polygon(polygon.coordinates));
+              countryPolygon.push(polygon.coordinates)
+    
+            };
           }
-        }
     });
 
-    // var linked = data.map(item => item.linked);
-    var geoDataLayer = L.geoJSON(linked)
+    countryMarkers.push(
+      L.marker([61.9241, 25.7482]).bindPopup(`<h5>${country}</h5><hr><strong>Score:</strong> ${score}<br><strong>Rank:</strong> ${rank}/${data.length}`));
+    countryPolygon.push(
+      L.polygon(locations));
 
-    var countryMarkers = [];
-    var countryPolygon = [];
-
-    // var linked = data.map(item => item.linked);
-    var rank = data.map(item => item.rank_2020);
-    var score = data.map(item => item.score_2020);
-    // linked = linked[0];
-    // linked_new = JSON.stringify(linked)
-    // console.log(linked)
-    // console.log(JSON.stringify(linked));
-    rank = rank[0];
-    score = score[0];
-    // var locations = linked.map(item => item.geometry.coordinates)
-    // var locationsNested = locations[i];
-    var country = linked.map(item => item.properties.ADMIN)
-    // country = country[0]
-    // console.log(country)
-    // coords = coords[0]
-    // console.log(location)
-
-      // for (var i = 0; i < feats.length; i++) {
-        // var coordsNew = [];
-        // var feat = feats[i];
-        // console.log(feat);
-        // coordsNew.push([feat['coordinates'][1], feat['coordinates'][0]]);
-        // countryPolygon.push(
-        //   L.polygon([coordsNew]));
-      // }
-  //   }
-  //  );
-  // });
-
-  // for (var i = location.length - 1; i >= 0; i--) {
-  //   console.log([location[0], location[1]].reverse())
-  // }
-
-        // linked.forEach(function(item) {
-        // if (coord) {
-        //   countryPolygon.push(
-        //     L.polygon([coords, coords]));
-        // }
-      // }
-        // )};
-
-      // locations = [];
-      // locations.push(locations);
-      // console.log(JSON.stringify(locations));
-
-      // coords = JSON.parse(coords)
-      // console.log(coords)
-
-      // var latlng = L.latLng([coords[1], coords[0]]);
-      // console.log(latlng)
-
-      countryMarkers.push(
-        L.marker([61.9241, 25.7482]).bindPopup(`<h5>${country}</h5><hr><strong>Score:</strong> ${score}<br><strong>Rank:</strong> ${rank}/${data.length}`));
-      // countryPolygon.push(
-      //   L.polygon([coords, coords]));
-    // };
-
-    var markerLayer = L.layerGroup(countryMarkers);
-    var countryLayer = L.layerGroup(countryPolygon);
-
-    var overlays = {
-      Markers: markerLayer,
-      Countries: countryLayer
-    };
+      var markerLayer = L.layerGroup(countryMarkers);
+      // var countryLayer = L.layerGroup(countryPolygon);
+  
+      var overlays = {
+        Markers: markerLayer
+        // Countries: countryLayer
+      };
 
     var worldMap = L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA",
     {
@@ -139,7 +91,7 @@ function buildMap(year) {
     var map = L.map("map", {
       center: [30, -25],
       zoom: 3,
-      layers: [worldMap, markerLayer, countryLayer]
+      // layers: [worldMap, markerLayer, countryLayer]
     });
 
     geoDataLayer.addTo(map);
