@@ -6,63 +6,42 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    fetch('http://127.0.0.1:5000/whr/' + 2020, {method:'POST'})
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
     .then(response => response.json())
     .then((data) => {
-        console.log(data)
+        // console.log(data)
 
-        results = data.map(item => item.features)
-        results = results[0]
-        console.log(results)
-
-        whr2020 = results.map(item => item.whr2020)
-        console.log(whr2020)
-        // whr2020 = whr2020[0]
-        // console.log(whr2020)
-
-      //   var sortedData = whr2020_results.sort(function(a, b) {
-      //     return parseFloat(a.score) - parseFloat(b.score);
-      // });
-
-      //   console.log(sortedData)
-
-  
-  
-      // const sortedData = _.sortBy(data, ['whr2020.score']);
-      // console.log(sortedData)
-
-
-        // var slicedData = data.slice(0,10);
+        var slicedData = data.slice(0,10);
         // console.log(slicedData)
 
-        // var reversedData = slicedData.reverse();
+        var reversedData = slicedData.reverse();
         // console.log(reversedData)
 
-        // var barTrace = {
-        //     x: reversedData.map(item => item.score_2020),
-        //     y: reversedData.map(item => item.country),
-        //     type: "bar",
-        //     text: reversedData.map(item => item.score_2020),
-        //     orientation: "h",
-        //     textposition: 'auto',
-        //     hoverinfo: 'none',
-        //     marker: {
-        //       color: 'rgb(158,202,225)',
-        //       opacity: 0.6,
-        //       line: {
-        //         color: 'rgb(8,48,107)',
-        //         width: 1.5
-        //       }}
-        //     };
+        var barTrace = {
+            x: reversedData.map(item => item.score),
+            y: reversedData.map(item => item.countryName),
+            type: "bar",
+            text: reversedData.map(item => item.score),
+            orientation: "h",
+            textposition: 'auto',
+            hoverinfo: 'none',
+            marker: {
+              color: 'rgb(158,202,225)',
+              opacity: 0.6,
+              line: {
+                color: 'rgb(8,48,107)',
+                width: 1.5
+              }}
+            };
 
-        // var layout = {
-        // title: `${year} Top 10 World Happiness Scores`,
-        // barmode: 'stack'
-        // };
+        var layout = {
+        title: `${year} Top 10 World Happiness Scores`,
+        barmode: 'stack'
+        };
 
-        // var data = [barTrace];
+        var data = [barTrace];
 
-        // Plotly.newPlot("bar", data, layout);
+        Plotly.newPlot("bar", data, layout);
     })
 };
 
@@ -109,6 +88,31 @@ function buildBarChart(year) {
 // )})
 // var year = 2020;
 
+var worldMap = L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA",
+{
+  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+  tileSize: 512,
+  maxZoom: 18,
+  zoomOffset: -1,
+  id: "mapbox/streets-v11",
+});
+
+var map = L.map("map", {
+  center: [50, -25],
+  zoom: 2,
+  layers: worldMap
+  // layers: [worldMap, countryLayer]
+});
+
+// geoDataLayer.addTo(map);
+worldMap.addTo(map);
+
+L.control.layers(
+  // null, overlays,
+  //   {collapsed: false}
+    ).addTo(map);
+
+
 // call data from database
 function buildMap(year) {
   fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
@@ -116,226 +120,55 @@ function buildMap(year) {
   .then(data => {
     console.log(data)
 
-    results = data.map(item => item.features)
-    results = results[0]
-    console.log(results)
+    var filteredData = data.filter(item => item.countryName != false); 
+  
+    console.log(filteredData)
 
-    whr2020 = results.map(item => item.whr2020)
-    console.log(whr2020)
-    // whr2020 = whr2020[0]
-    // console.log(whr2020)
+    var country = filteredData.map(item => item.countryName);
+    console.log(country)
+    var rank = filteredData.map(item => item.rank);
+    console.log(rank)
+    var score = filteredData.map(item => item.score);
+    console.log(score)
 
-  //   var sortedData = whr2020_results.sort(function(a, b) {
-  //     return parseFloat(a.score) - parseFloat(b.score);
-  // });
+    function getColor(d) {
+      return d > 10 ? '#E31A1C' :
+              d > 6.4  ? '#FC4E2A' :
+              d > 5  ? '#FEB24C' :
+              d > 4  ? '#FED976' :
+                        '#FFEDA0';
+  }
 
-  //   console.log(sortedData)
-
-  results.forEach(function(item){
-    var geom = item.geometry;
-    var coords = geom.coordinates;
-    var props = item.properties;
-    var countryName = props.ADMIN;
-    // console.log(countryName);
-  });
-
-  whr2020.forEach(function(item){
-    var whr2020 = item.whr2020;
-    var score =+ whr2020.score;
-    console.log(score);
-    var rank =+ whr2020.rank;
-    console.log(rank);
-  })
-
-  // for (var i=0; i < )
-
-  if (geom.type === 'MultiPolygon') {
-    for (var i=0; i < geom.coordinates.length; i++){
-      var countryPolygon = [];
-      var polygon = {
-          'type':'Polygon', 
-          'coordinates': geom.coordinates[i],
-          'properties': props.ADMIN};
-      // console.log(JSON.stringify(polygon));
-      countryPolygon.push(polygon.coordinates);
-      // console.log(polygon.coordinates);
-  }}
-
-  var country = data.map(item => item.country);
-  var rank = data.map(item => item.rank_2020);
-  var score = data.map(item => item.score_2020);
-  var linked = data.map(item => item.linked);
-
-  // Object.entries(data).forEach(item => console.log(item))
-  linked = linked[1];
-  // country = country[0];
-  // score = score[0];
-  // rank = rank[0];
-
-  console.log(data);
-  console.log(linked);
-  console.log(country);
-  console.log(rank);
-  console.log(score);
-
-  var geoDataLayer = L.geoJSON(data, {
-    // style: function (feature) {
-    //   return {color: feature.properties.color};
-    // },
-    onEachFeature: function (feature, layer) {
-      for (var v=0; v < data.length; v++) {
-        layer.bindPopup(`<h5>${country[v]}</h5><hr><strong>Score:</strong> ${score[v]}<br><strong>Rank:</strong> ${rank[v]}/${data.length}`)
-      }
-    }
-  });
-  // geoDataLayer.addData(data);
-  var myLayers = geoDataLayer.getLayers();
-  // console.log(myLayers)
-  // geoJsonLayer.eachLayer(function(layer) {
-  //   layer.bindPopup(layer.feature.properties.name);
-  // });
-
-  // linked.forEach(function(entry){
-  //   var geom = entry.geometry;
-  //   console.log(geom);
-  //   var props = entry.properties;
-  //   console.log(props);
-
-  data.forEach(function(item){
-    var geom = item.geometry;
-    var coords = geom.coordinates
-    console.log(geom);
-    var props = item.properties;
-    console.log(props);
-
-    if (geom.type === 'MultiPolygon') {
-      for (var i=0; i < geom.coordinates.length; i++){
-        var countryPolygon = [];
-        var polygon = {
-            'type':'Polygon', 
-            'coordinates': geom.coordinates[i],
-            'properties': props.ADMIN};
-        // console.log(JSON.stringify(polygon));
-        countryPolygon.push(polygon.coordinates);
-        // console.log(polygon.coordinates);
-    }}
-
-    // if (year === 2020) {
-      // for (var x=0; x < country.length; x++){
-      //   var countries = [];
-      //   var ranks = [];
-      //   var scores = [];
-      //   var info = {
-      //     'country': country.country,
-      //     'rank_2020': country.rank_2020,
-      //     'score_2020': country.score_2020};
-      //   countries.push(info.country);
-      //   ranks.push(info.rank_2020);
-      //   scores.push(info.score_2020)
-      //   console.log(info.country)
-      //   console.log(info.rank_2020)
-      //   console.log(info.score_2020)
+    function style(feature) {
+      return {
+          fillColor: getColor(parseFloat(feature.score)),
+          weight: 2,
+          opacity: 1,
+          color: 'white',
+          dashArray: '3',
+          fillOpacity: 0.7
+      };
+  }
+  
+  var geoDataLayer = 
+  L.geoJson(filteredData, {
+    style: style,
+    onEachFeature: function(feature, layer) {
+      //   // for (var i in filteredData) {
+      //   for (var i = 0; i < filteredData.length; i++) {
+      //     var data = filteredData[i]
+          layer.bindPopup(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${feature.score}<br><strong>Rank: </strong>${feature.rank} out of ${filteredData.length}`);
       //   }
-    // }
-    
-    // countryPolygon.push(
-    //   L.polygon(polygon.coordinates).bindPopup(`<h5>${country[i]}</h5><hr><strong>Score:</strong> ${score[i]}<br><strong>Rank:</strong> ${rank[i]}/${data.length}`));
+      }
+  }
+    ).addTo(map);
 
-    // var countryLayer = L.layerGroup(countryPolygon);
-    // var overlays = {
-      // Markers: markerLayer,
-    //   Countries: countryLayer
-    // };
-    // geoDataLayer.addData(countryLayer);
+
+
+    // var myLayers = geoDataLayer.getLayers();
+
   
-      var worldMap = L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA",
-      {
-        attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-        tileSize: 512,
-        maxZoom: 18,
-        zoomOffset: -1,
-        id: "mapbox/streets-v11",
-      });
-  
-      var map = L.map("map", {
-        center: [50, -25],
-        zoom: 3,
-        layers: worldMap
-        // layers: [worldMap, countryLayer]
-      });
-  
-      geoDataLayer.addTo(map);
-      worldMap.addTo(map);
-  
-      // d3.json(linked).then(function(data) {
-      //   var chroro = L.choropleth(data, {
-      //     valueProperty: 'score_2020',
-      //     scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
-      //     steps: 10, // number of breaks or steps in range
-      //     mode: 'q', // q for quantile, e for equidistant, k for k-means
-      //     style: {
-      //       color: '#fff', // border color
-      //       weight: 1,
-      //       fillOpacity: 0.8
-      //     },
-      //   }).addTo(map);
-      // })
-  
-      L.control.layers(
-        // null, overlays,
-        //   {collapsed: false}
-          ).addTo(map);
-        })
-      })
-};
-  
-  // function callGeoData(year) {
-  //   fetch('http://127.0.0.1:5000/whr/' + 2020, {method:'POST'})
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     d3.json(json).then(function(data) {
-  //       var geojson = L.choropleth(data, {
-  //         valueProperty: 'score_2020',
-  //         scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
-  //         steps: 10, // number of breaks or steps in range
-  //         mode: 'q', // q for quantile, e for equidistant, k for k-means
-  //         style: {
-  //           color: '#fff', // border color
-  //           weight: 1,
-  //           fillOpacity: 0.8
-  //         },
-  //       }).addTo(map);
-  //     })
-  // })}
-  
-  // callGeoData(2020);
-  
-  // function callData() {
-  //   const url = 'http://127.0.0.1:5000/whr/' + year
-  //   fetch(url, {method:'POST'})
-  //   .then(response => response.json())  
-  //   .then(json => {
-  //       console.log(json);
-  //       document.getElementById("demo").innerHTML = JSON.stringify(json)
-  //   })
-  // }
-  
-  
-  // d3.json(callData).then(function(data) {
-  //   console.log(data);
-  //   var geojson = L.choropleth(data, {
-  //     valueProperty: 'score',
-  //     scale: ['#fee8c8','#fdbb84','#e34a33'], // chroma.js scale - include as many as you like
-  //     steps: 10, // number of breaks or steps in range
-  //     mode: 'q', // q for quantile, e for equidistant, k for k-means
-  //     style: {
-  //       color: '#fff', // border color
-  //       weight: 1,
-  //       fillOpacity: 0.8
-  //     },
-  //   }).addTo(map);
-  // })
-  
+
     
     //   // Set up the legend
     //   var legend = L.control({ position: 'bottomleft' })
@@ -359,6 +192,8 @@ function buildMap(year) {
     //     // Adding legend to the map
     //   legend.addTo(myMap);
     // })
+  })
+};
 
 // init function
 function init() {
@@ -370,8 +205,8 @@ function init() {
     .then(response => response.json())
     .then((data) => {
         // console.log(data)
-        buildBarChart(2020);
-        buildMap(2020);
+        buildBarChart(year);
+        buildMap(year);
     })
 };
 // create event handler call optionChanged when new drop down item is selected
