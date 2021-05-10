@@ -9,37 +9,60 @@ function buildBarChart(year) {
     fetch('http://127.0.0.1:5000/whr/' + 2020, {method:'POST'})
     .then(response => response.json())
     .then((data) => {
-        // console.log(data)
+        console.log(data)
 
-        var slicedData = data.slice(0,10);
+        results = data.map(item => item.features)
+        results = results[0]
+        console.log(results)
 
-        var reversedData = slicedData.reverse();
+        whr2020 = results.map(item => item.whr2020)
+        console.log(whr2020)
+        // whr2020 = whr2020[0]
+        // console.log(whr2020)
 
-        var barTrace = {
-            x: reversedData.map(item => item.score_2020),
-            y: reversedData.map(item => item.country),
-            type: "bar",
-            text: reversedData.map(item => item.score_2020),
-            orientation: "h",
-            textposition: 'auto',
-            hoverinfo: 'none',
-            marker: {
-              color: 'rgb(158,202,225)',
-              opacity: 0.6,
-              line: {
-                color: 'rgb(8,48,107)',
-                width: 1.5
-              }}
-            };
+      //   var sortedData = whr2020_results.sort(function(a, b) {
+      //     return parseFloat(a.score) - parseFloat(b.score);
+      // });
 
-        var layout = {
-        title: `${year} Top 10 World Happiness Scores`,
-        barmode: 'stack'
-        };
+      //   console.log(sortedData)
 
-        var data = [barTrace];
+  
+  
+      // const sortedData = _.sortBy(data, ['whr2020.score']);
+      // console.log(sortedData)
 
-        Plotly.newPlot("bar", data, layout);
+
+        // var slicedData = data.slice(0,10);
+        // console.log(slicedData)
+
+        // var reversedData = slicedData.reverse();
+        // console.log(reversedData)
+
+        // var barTrace = {
+        //     x: reversedData.map(item => item.score_2020),
+        //     y: reversedData.map(item => item.country),
+        //     type: "bar",
+        //     text: reversedData.map(item => item.score_2020),
+        //     orientation: "h",
+        //     textposition: 'auto',
+        //     hoverinfo: 'none',
+        //     marker: {
+        //       color: 'rgb(158,202,225)',
+        //       opacity: 0.6,
+        //       line: {
+        //         color: 'rgb(8,48,107)',
+        //         width: 1.5
+        //       }}
+        //     };
+
+        // var layout = {
+        // title: `${year} Top 10 World Happiness Scores`,
+        // barmode: 'stack'
+        // };
+
+        // var data = [barTrace];
+
+        // Plotly.newPlot("bar", data, layout);
     })
 };
 
@@ -91,12 +114,60 @@ function buildMap(year) {
   fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
   .then(response => response.json())
   .then(data => {
+    console.log(data)
+
+    results = data.map(item => item.features)
+    results = results[0]
+    console.log(results)
+
+    whr2020 = results.map(item => item.whr2020)
+    console.log(whr2020)
+    // whr2020 = whr2020[0]
+    // console.log(whr2020)
+
+  //   var sortedData = whr2020_results.sort(function(a, b) {
+  //     return parseFloat(a.score) - parseFloat(b.score);
+  // });
+
+  //   console.log(sortedData)
+
+  results.forEach(function(item){
+    var geom = item.geometry;
+    var coords = geom.coordinates;
+    var props = item.properties;
+    var countryName = props.ADMIN;
+    // console.log(countryName);
+  });
+
+  whr2020.forEach(function(item){
+    var whr2020 = item.whr2020;
+    var score =+ whr2020.score;
+    console.log(score);
+    var rank =+ whr2020.rank;
+    console.log(rank);
+  })
+
+  // for (var i=0; i < )
+
+  if (geom.type === 'MultiPolygon') {
+    for (var i=0; i < geom.coordinates.length; i++){
+      var countryPolygon = [];
+      var polygon = {
+          'type':'Polygon', 
+          'coordinates': geom.coordinates[i],
+          'properties': props.ADMIN};
+      // console.log(JSON.stringify(polygon));
+      countryPolygon.push(polygon.coordinates);
+      // console.log(polygon.coordinates);
+  }}
 
   var country = data.map(item => item.country);
   var rank = data.map(item => item.rank_2020);
   var score = data.map(item => item.score_2020);
   var linked = data.map(item => item.linked);
-  linked = linked[0];
+
+  // Object.entries(data).forEach(item => console.log(item))
+  linked = linked[1];
   // country = country[0];
   // score = score[0];
   // rank = rank[0];
@@ -104,27 +175,38 @@ function buildMap(year) {
   console.log(data);
   console.log(linked);
   console.log(country);
+  console.log(rank);
+  console.log(score);
 
-  var geoDataLayer = L.geoJSON(linked, {
+  var geoDataLayer = L.geoJSON(data, {
     // style: function (feature) {
     //   return {color: feature.properties.color};
     // },
     onEachFeature: function (feature, layer) {
-      for (var v=0; v < linked.length; v++) {
+      for (var v=0; v < data.length; v++) {
         layer.bindPopup(`<h5>${country[v]}</h5><hr><strong>Score:</strong> ${score[v]}<br><strong>Rank:</strong> ${rank[v]}/${data.length}`)
       }
     }
   });
   // geoDataLayer.addData(data);
+  var myLayers = geoDataLayer.getLayers();
+  // console.log(myLayers)
+  // geoJsonLayer.eachLayer(function(layer) {
+  //   layer.bindPopup(layer.feature.properties.name);
+  // });
 
-  linked.forEach(function(item){
-    for (var a=0; a < linked.length; a++) {
-      linked = linked[a];
-      var geom = item.geometry;
-      console.log(geom);
-      var props = item.properties;
-      console.log(props);
-    }
+  // linked.forEach(function(entry){
+  //   var geom = entry.geometry;
+  //   console.log(geom);
+  //   var props = entry.properties;
+  //   console.log(props);
+
+  data.forEach(function(item){
+    var geom = item.geometry;
+    var coords = geom.coordinates
+    console.log(geom);
+    var props = item.properties;
+    console.log(props);
 
     if (geom.type === 'MultiPolygon') {
       for (var i=0; i < geom.coordinates.length; i++){
@@ -132,7 +214,7 @@ function buildMap(year) {
         var polygon = {
             'type':'Polygon', 
             'coordinates': geom.coordinates[i],
-            'properties': props};
+            'properties': props.ADMIN};
         // console.log(JSON.stringify(polygon));
         countryPolygon.push(polygon.coordinates);
         // console.log(polygon.coordinates);
@@ -176,7 +258,7 @@ function buildMap(year) {
       });
   
       var map = L.map("map", {
-        center: [30, -25],
+        center: [50, -25],
         zoom: 3,
         layers: worldMap
         // layers: [worldMap, countryLayer]

@@ -29,7 +29,7 @@ def parse_json(data):
 
 # flask routes
 @app.route("/")
-def welcome():
+def welcome():    
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
@@ -47,32 +47,37 @@ def r2020():
     def add_header(response):
         # response = flask.jsonify({'some': 'data'})
         response.headers.add('Access-Control-Allow-Origin', '*')
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
-    # results = mongo.db.allyears.find({},\
-    #     { "country": 1, "2020_score": 1, "2020_rank": 1, "_id": 0 })
-    # results_sorted = parse_json(results.sort("2020_score", -1))
+    countries = parse_json(mongo.db.newCountries.find({}))
 
-    # results = parse_json(mongo.db.countries.find({},{"properties.ADMIN": 1, "geometry.coordinates": 1, "_id": 0}))
-    # # { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
+    whr2020 = parse_json(mongo.db.whr2020.find({}))
 
-    # return json.dumps(results)
-
-    results = parse_json(mongo.db.allyears.aggregate([
-        # {"$unwind": "$properties"
-        # },pytho
-        {"$lookup":{
-            "from": "countries",       # other table name
-            "localField": "country",        # key field in collection 2
-            "foreignField": "properties.ADMIN",      # key field in collection 1
-            "as": "linked"   # alias for resulting table
-        }},
-        {"$sort":{
-            "score_2020": -1
-        }}
-    ]))
+    for items in range(len(countries[0]['features'])):
     
-    return json.dumps(results)
+        for idx,d in enumerate(countries[0]['features']):
+            countries[0]['features'][items]['countryName'] = ""
+            countries[0]['features'][items]['score'] = ""
+            countries[0]['features'][items]['rank'] = ""
+
+            countryName = countries[0]['features'][items]['properties']['ADMIN']
+
+            for item in whr2020:
+                if (item['country']) == countryName:
+                    country = item['country']
+                    score = item['score']
+                    rank = item['overall_rank']
+                    countries[0]['features'][items]['score'] = score
+                    countries[0]['features'][items]['countryName'] = country
+                    countries[0]['features'][items]['rank'] = rank
+
+            if countries[0]['features'][items]['score'] == "":
+                countries[0]['features'][items]['score'] = 0
+
+    sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
+
+    return json.dumps(sortedCountries)
 
 
 @app.route("/whr/2019", methods=['POST','GET'])
@@ -82,10 +87,34 @@ def r2019():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.allyears.find({},\
-        { "country": 1, "2019_score": 1, "2019_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("2019_score", -1))
-    return json.dumps(results_sorted)
+    countries = parse_json(mongo.db.newCountries.find({}))
+
+    whr2019 = parse_json(mongo.db.whr2019.find({}))
+
+    for items in range(len(countries[0]['features'])):
+    
+        for idx,d in enumerate(countries[0]['features']):
+            countries[0]['features'][items]['countryName'] = ""
+            countries[0]['features'][items]['score'] = ""
+            countries[0]['features'][items]['rank'] = ""
+
+            countryName = countries[0]['features'][items]['properties']['ADMIN']
+
+            for item in whr2019:
+                if (item['country']) == countryName:
+                    country = item['country']
+                    score = item['score']
+                    rank = item['overall_rank']
+                    countries[0]['features'][items]['score'] = score
+                    countries[0]['features'][items]['countryName'] = country
+                    countries[0]['features'][items]['rank'] = rank
+  
+            if countries[0]['features'][items]['score'] == "":
+                countries[0]['features'][items]['score'] = 0
+
+    sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
+
+    return json.dumps(sortedCountries)
 
 
 @app.route("/whr/2018", methods=['POST','GET'])
@@ -95,11 +124,34 @@ def r2018():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.allyears.find({},\
-        { "country": 1, "2018_score": 1, "2018_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("2018_score", -1))
+    countries = parse_json(mongo.db.newCountries.find({}))
 
-    return json.dumps(results_sorted)
+    whr2018 = parse_json(mongo.db.whr2018.find({}))
+
+    for items in range(len(countries[0]['features'])):
+    
+        for idx,d in enumerate(countries[0]['features']):
+            countries[0]['features'][items]['countryName'] = ""
+            countries[0]['features'][items]['score'] = ""
+            countries[0]['features'][items]['rank'] = ""
+
+            countryName = countries[0]['features'][items]['properties']['ADMIN']
+
+            for item in whr2018:
+                if (item['country']) == countryName:
+                    country = item['country']
+                    score = item['score']
+                    rank = item['overall_rank']
+                    countries[0]['features'][items]['score'] = score
+                    countries[0]['features'][items]['countryName'] = country
+                    countries[0]['features'][items]['rank'] = rank
+            
+            if countries[0]['features'][items]['score'] == "":
+                countries[0]['features'][items]['score'] = 0
+
+    sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
+
+    return json.dumps(sortedCountries)
 
 
 @app.route("/whr/2017", methods=['POST','GET'])
@@ -109,11 +161,34 @@ def r2017():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.allyears.find({},\
-        { "country": 1, "2017_score": 1, "2017_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("2017_score", -1))
+    countries = parse_json(mongo.db.newCountries.find({}))
 
-    return json.dumps(results_sorted)
+    whr2017 = parse_json(mongo.db.whr2017.find({}))
+
+    for items in range(len(countries[0]['features'])):
+    
+        for idx,d in enumerate(countries[0]['features']):
+            countries[0]['features'][items]['countryName'] = ""
+            countries[0]['features'][items]['score'] = ""
+            countries[0]['features'][items]['rank'] = ""
+
+            countryName = countries[0]['features'][items]['properties']['ADMIN']
+
+            for item in whr2017:
+                if (item['country']) == countryName:
+                    country = item['country']
+                    score = item['score']
+                    rank = item['overall_rank']
+                    countries[0]['features'][items]['score'] = score
+                    countries[0]['features'][items]['countryName'] = country
+                    countries[0]['features'][items]['rank'] = rank
+            
+            if countries[0]['features'][items]['score'] == "":
+                countries[0]['features'][items]['score'] = 0
+
+    sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
+
+    return json.dumps(sortedCountries)
 
 
 @app.route("/whr/2016", methods=['POST','GET'])
@@ -123,65 +198,36 @@ def r2016():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-    results = mongo.db.allyears.find({},\
-        { "country": 1, "2016_score": 1, "2016_rank": 1, "_id": 0 })
-    results_sorted = parse_json(results.sort("2016_score", -1))
+    countries = parse_json(mongo.db.newCountries.find({}))
 
-    return json.dumps(results_sorted)
+    whr2016 = parse_json(mongo.db.whr2016.find({}))
+
+    for items in range(len(countries[0]['features'])):
+    
+        for idx,d in enumerate(countries[0]['features']):
+            countries[0]['features'][items]['countryName'] = ""
+            countries[0]['features'][items]['score'] = ""
+            countries[0]['features'][items]['rank'] = ""
+
+            countryName = countries[0]['features'][items]['properties']['ADMIN']
+
+            for item in whr2016:
+                if (item['country']) == countryName:
+                    country = item['country']
+                    score = item['score']
+                    rank = item['overall_rank']
+                    countries[0]['features'][items]['score'] = score
+                    countries[0]['features'][items]['countryName'] = country
+                    countries[0]['features'][items]['rank'] = rank
+            
+            if countries[0]['features'][items]['score'] == "":
+                countries[0]['features'][items]['score'] = 0
+
+    sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
+
+    return json.dumps(sortedCountries)
 
 
-@app.route("/whr/2020/<year>", methods=['POST','GET'])
-def year_selected(year):
-    @after_this_request
-    def add_header(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
-
-#     session = Session()
-
-#     # query the data depending on year
-#     if year == 2020:
-#         results = session.query(Whr2020.year, Whr2020.country, Whr2020.score, Whr2020.overall_rank).all()
-#     elif year == 2019:
-#         results = session.query(Whr2019.year, Whr2019.country, Whr2019.score, Whr2019.overall_rank).all()
-#     elif year == 2018:
-#         results = session.query(Whr2018.year, Whr2018.country, Whr2018.score, Whr2018.overall_rank).all()
-#     elif year == 2017:
-#         results = session.query(Whr2017.year, Whr2017.country, Whr2017.score, Whr2017.overall_rank).all()
-#     else:
-#         results = session.query(Whr2016.year, Whr2016.country, Whr2016.score, Whr2016.overall_rank).all()
-
-#     results = mongo.db.whr2016.find({},\
-#         { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-#     results_sorted = parse_json(results.sort("score", -1))
-
-#     return json.dumps(results_sorted)
-
-@app.route("/map/2020", methods=['POST','GET'])
-def m2020():
-    @after_this_request
-    def add_header(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
-
-    results = parse_json(mongo.db.countries.find({},{"properties.ADMIN": 1, "geometry.coordinates": 1, "_id": 0}))
-        # { "id": 1, "year": 1, "country": 1, "score": 1, "overall_rank": 1, "_id": 0 })
-
-    return json.dumps(results)
-
-#     session.close()
-
-#     # Create a dictionary from the row data and append to a list of all_passengers
-#     all_passengers = []
-#     for name, age, sex in results:
-#         passenger_dict = {}
-#         passenger_dict["name"] = name
-#         passenger_dict["age"] = age
-#         passenger_dict["sex"] = sex
-#         all_passengers.append(passenger_dict)
-
-    # return jsonify(results)
-    # return json.dumps(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
