@@ -18,10 +18,10 @@ function buildBarChart(year) {
         // console.log(reversedData)
 
         var barTrace = {
-            x: reversedData.map(item => item.score),
+            x: reversedData.map(item => parseFloat(item.score).toFixed(2)),
             y: reversedData.map(item => item.countryName),
             type: "bar",
-            text: reversedData.map(item => item.score),
+            text: reversedData.map(item => parseFloat(item.score).toFixed(2)),
             orientation: "h",
             textposition: 'auto',
             hoverinfo: 'none',
@@ -154,21 +154,12 @@ function buildMap(year) {
   L.geoJson(filteredData, {
     style: style,
     onEachFeature: function(feature, layer) {
-      //   // for (var i in filteredData) {
-      //   for (var i = 0; i < filteredData.length; i++) {
-      //     var data = filteredData[i]
-          layer.bindPopup(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${feature.score}<br><strong>Rank: </strong>${feature.rank} out of ${filteredData.length}`);
-      //   }
+          layer.bindPopup(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${(parseFloat(feature.score).toFixed(2))}<br><strong>Rank: </strong>${feature.rank} out of ${filteredData.length}`);
       }
   }
     ).addTo(map);
 
-
-
     // var myLayers = geoDataLayer.getLayers();
-
-  
-
     
     //   // Set up the legend
     //   var legend = L.control({ position: 'bottomleft' })
