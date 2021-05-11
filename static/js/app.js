@@ -6,10 +6,15 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
-    .then(response => response.json())
-    .then((data) => {
+    // fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
+    // .then(response => response.json())
+    // .then((data) => {
         // console.log(data)
+
+      const url = "/whr/" + year;
+      d3.json(url).then(function(response) {
+
+      
 
         var slicedData = data.slice(0,10);
         // console.log(slicedData)
@@ -44,7 +49,7 @@ function buildBarChart(year) {
         Plotly.newPlot("bar", data, layout);
     })
 };
-
+// });
 // // display individual's demographic data
 // function buildMetaData(sampleNumber) {
 //     d3.json("./samples.json").then((data) => {

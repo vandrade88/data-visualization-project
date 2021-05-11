@@ -1,9 +1,3 @@
-import sqlalchemy
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, func
-
 import simplejson as json
 
 from flask import Flask, jsonify, after_this_request, render_template, redirect, url_for
