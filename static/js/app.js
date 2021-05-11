@@ -6,7 +6,7 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
     .then(response => response.json())
     .then((data) => {
         // console.log(data)
@@ -62,32 +62,6 @@ function buildBarChart(year) {
 
 // leaflet map
 
-// popup bind for map (Country Name & Score<hr>Rank)
-
-// fetch('http://127.0.0.1:5000/whr/year/' + year, {method:'POST'})
-// .then(response => response.json())
-// .then((data) => {
-//     console.log(data)
-
-// map.on('load', function() {
-//   map.addLayer(
-//     {
-//       id: 'country-boundaries',
-//       source: {
-//         type: 'vector',
-//         url: 'mapbox://mapbox.country-boundaries-v1',
-//       },
-//       'source-layer': 'country_boundaries',
-//       type: 'fill',
-//       paint: {
-//         'fill-color': '#d2361e',
-//         'fill-opacity': 0.4,
-//       },
-//     },
-//     'country-label'
-// )})
-// var year = 2020;
-
 var worldMap = L.tileLayer("https://api.mapbox.com/styles/v1/vandrade88/cko1ergg90u6317nbouu9cv8e/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmFuZHJhZGU4OCIsImEiOiJja25ic3h5cWowcG1hMnBsbHg1aTUwend6In0.JyURQn6pP7A1BUZFYCNgfA",
 {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -115,7 +89,7 @@ L.control.layers(
 
 // call data from database
 function buildMap(year) {
-  fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
+  fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
   .then(response => response.json())
   .then(data => {
     console.log(data)
@@ -192,7 +166,7 @@ function init() {
     var year = dropdownMenu.property("value");
     // var data = [];
 
-    fetch('http://127.0.0.1:5000/whr/2020', {method:'POST'})
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
     .then(response => response.json())
     .then((data) => {
         // console.log(data)

@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, func
 
 import simplejson as json
 
-from flask import Flask, jsonify, after_this_request
+from flask import Flask, jsonify, after_this_request, render_template, redirect, url_for
 
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
@@ -28,26 +28,28 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 # flask routes
-@app.route("/")
-def welcome():    
-    """List all available api routes."""
-    return (
-        f"Available Routes:<br/>"
-        f"/whr/2020<br/>"
-        f"/whr/2019<br/>"
-        f"/whr/2018<br/>"
-        f"/whr/2017<br/>"
-        f"/whr/2016<br/>"
-        f"/whr/year/<year>"
-    )
+@app.route("/", methods=['GET'])
+def home():    
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', '*')
+        return response
 
-@app.route("/whr/2020", methods=['POST','GET'])
+    countries = parse_json(mongo.db.newCountries.find({}))
+    results = json.dumps(countries)
+    return render_template('index.html', results=results)
+
+@app.route("/whr/2020", methods=['GET'])
 def r2020():
     @after_this_request
     def add_header(response):
-        # response = flask.jsonify({'some': 'data'})
         response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers.add('Content-Security-Policy', 'self')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -77,14 +79,18 @@ def r2020():
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
-    return json.dumps(sortedCountries)
+    results = json.dumps(sortedCountries)
+    return render_template('whr2020.html', results=results)
 
 
-@app.route("/whr/2019", methods=['POST','GET'])
+@app.route("/whr/2019", methods=['GET'])
 def r2019():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -114,14 +120,18 @@ def r2019():
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
-    return json.dumps(sortedCountries)
+    results = json.dumps(sortedCountries)
+    return render_template('whr2019.html', results=results)
 
 
-@app.route("/whr/2018", methods=['POST','GET'])
+@app.route("/whr/2018", methods=['GET'])
 def r2018():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -151,14 +161,18 @@ def r2018():
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
-    return json.dumps(sortedCountries)
+    results = json.dumps(sortedCountries)
+    return render_template('whr2018.html', results=results)
 
 
-@app.route("/whr/2017", methods=['POST','GET'])
+@app.route("/whr/2017", methods=['GET'])
 def r2017():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -188,14 +202,19 @@ def r2017():
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
-    return json.dumps(sortedCountries)
+    # return json.dumps(sortedCountries)
+    results = json.dumps(sortedCountries)
+    return render_template('whr2017.html', results=results)
 
 
-@app.route("/whr/2016", methods=['POST','GET'])
+@app.route("/whr/2016", methods=['GET'])
 def r2016():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -225,8 +244,22 @@ def r2016():
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
-    return json.dumps(sortedCountries)
+    results = json.dumps(sortedCountries)
+    return render_template('whr2016.html', results=results)
 
+
+@app.errorhandler(404)
+def not_found(error):
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        response.headers['Cache-Control'] = 'public, max-age=0'
+        response.headers.add('Content-Security-Policy', 'self')
+        return response
+
+    app.logger.info(error)
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
