@@ -6,13 +6,13 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    // fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
-    // .then(response => response.json())
-    // .then((data) => {
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
+    .then(response => response.json())
+    .then((data) => {
         // console.log(data)
 
-      const url = "/whr/" + year;
-      d3.json(url).then(function(response) {
+      // const url = "/whr/" + year;
+      // d3.json(url).then(function(response) {
 
       
 
