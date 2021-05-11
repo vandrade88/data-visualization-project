@@ -26,10 +26,10 @@ def parse_json(data):
 def home():    
     @after_this_request
     def add_header(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', '*')
+        response.headers.add('Access-Control-Allow-Origin', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', '*')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -40,10 +40,10 @@ def home():
 def r2020():
     @after_this_request
     def add_header(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
+        response.headers.add('Access-Control-Allow-Origin', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -82,9 +82,9 @@ def r2019():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -123,9 +123,9 @@ def r2018():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -164,9 +164,9 @@ def r2017():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -206,9 +206,9 @@ def r2016():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -247,10 +247,10 @@ def not_found(error):
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        response.headers['Cache-Control'] = 'public, max-age=0'
-        response.headers.add('Content-Security-Policy', 'self')
-        return response
+        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+        # response.headers['Cache-Control'] = 'public, max-age=0'
+        # response.headers.add('Content-Security-Policy', 'self')
+        # return response
 
     app.logger.info(error)
     return render_template('404.html'), 404
