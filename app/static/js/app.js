@@ -6,15 +6,10 @@
 
 // horizontal bar chart to be called by year selected in dropdown sorted by top 10
 function buildBarChart(year) {
-    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
     .then(response => response.json())
     .then((data) => {
         // console.log(data)
-
-      // const url = "/whr/" + year;
-      // d3.json(url).then(function(response) {
-
-      
 
         var slicedData = data.slice(0,10);
         // console.log(slicedData)
@@ -94,7 +89,7 @@ L.control.layers(
 
 // call data from database
 function buildMap(year) {
-  fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
+  fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
   .then(response => response.json())
   .then(data => {
     console.log(data)
@@ -171,7 +166,7 @@ function init() {
     var year = dropdownMenu.property("value");
     // var data = [];
 
-    fetch('http://127.0.0.1:5000/whr/' + year, {method:'GET'})
+    fetch('http://127.0.0.1:5000/whr/' + year, {method:'POST'})
     .then(response => response.json())
     .then((data) => {
         // console.log(data)

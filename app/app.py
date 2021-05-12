@@ -1,14 +1,30 @@
-import simplejson as json
-
-from flask import Flask, jsonify, after_this_request, render_template, redirect, url_for
-
+import os
+from flask import Flask, after_this_request, render_template, redirect, url_for, request, send_from_directory, current_app
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
-
 from bson import json_util
+import simplejson as json
+from flask_cors import CORS, cross_origin
 
 # flask setup
-app = Flask(__name__)
+# root_path = os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app")
+
+# app = Flask(__name__)
+# app._static_folder = template_dir
+# app = Flask(__name__, static_url_path='')
+# template_dir = os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/static/")
+# app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__,\
+    # static_url_path='/localhost:8000/app/static',\
+    static_url_path='/static',
+    static_folder='static')
+    # template_folder='./app/templates')
+# app._static_folder = os.path.abspath("static/")
+# app = Flask(__name__, static_url_path="", static_folder="static")
+# (app) = Flask(__name__,\
+#     static_folder=os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/static/"), \
+#         template_folder=os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/templates"))
+# CORS(app)
 
 # mongo database setup
 app.config["MONGO_URI"] = "mongodb://localhost:27017/geojson"
@@ -22,7 +38,18 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 # flask routes
-@app.route("/", methods=['GET'])
+
+# @app.route('/js/<path:path>')
+# def send_js(path):
+#     return send_from_directory('js', path)
+
+# @app.route('/static/<path:filename>')
+# def serve_static(filename):
+#     root_dir = os.path.dirname(os.getcwd())
+#     return send_from_directory(os.path.join(root_dir, 'static', 'js'), filename)
+
+
+@app.route("/", methods=['POST', 'GET'])
 def home():    
     @after_this_request
     def add_header(response):
@@ -32,11 +59,9 @@ def home():
         # response.headers.add('Content-Security-Policy', '*')
         return response
 
-    countries = parse_json(mongo.db.newCountries.find({}))
-    results = json.dumps(countries)
-    return render_template('index.html', results=results)
+    return render_template('index.html')
 
-@app.route("/whr/2020", methods=['GET'])
+@app.route("/whr/2020", methods=['POST', 'GET'])
 def r2020():
     @after_this_request
     def add_header(response):
@@ -74,10 +99,12 @@ def r2020():
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
     results = json.dumps(sortedCountries)
-    return render_template('whr2020.html', results=results)
+    
+    return results
+    # return render_template('index.html', results=results)
 
 
-@app.route("/whr/2019", methods=['GET'])
+@app.route("/whr/2019", methods=['POST', 'GET'])
 def r2019():
     @after_this_request
     def add_header(response):
@@ -115,10 +142,11 @@ def r2019():
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
 
     results = json.dumps(sortedCountries)
-    return render_template('whr2019.html', results=results)
+    return results
+    # return render_template('index.html', results=results)
 
 
-@app.route("/whr/2018", methods=['GET'])
+@app.route("/whr/2018", methods=['POST', 'GET'])
 def r2018():
     @after_this_request
     def add_header(response):
@@ -154,12 +182,11 @@ def r2018():
                 countries[0]['features'][items]['score'] = 0
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
-
     results = json.dumps(sortedCountries)
-    return render_template('whr2018.html', results=results)
+    return results
 
 
-@app.route("/whr/2017", methods=['GET'])
+@app.route("/whr/2017", methods=['POST', 'GET'])
 def r2017():
     @after_this_request
     def add_header(response):
@@ -195,13 +222,12 @@ def r2017():
                 countries[0]['features'][items]['score'] = 0
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
-
-    # return json.dumps(sortedCountries)
     results = json.dumps(sortedCountries)
-    return render_template('whr2017.html', results=results)
+    return results
 
 
-@app.route("/whr/2016", methods=['GET'])
+
+@app.route("/whr/2016", methods=['POST', 'GET'])
 def r2016():
     @after_this_request
     def add_header(response):
@@ -237,24 +263,25 @@ def r2016():
                 countries[0]['features'][items]['score'] = 0
 
     sortedCountries = sorted(countries[0]['features'], key=lambda x: float(x['score']), reverse = True)
-
     results = json.dumps(sortedCountries)
-    return render_template('whr2016.html', results=results)
+    return results
 
+# @app.errorhandler(404)
+# def not_found(error):
+#     @after_this_request
+#     def add_header(response):
+#         response.headers.add('Access-Control-Allow-Origin', '*')
+#         # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+#         # response.headers['Cache-Control'] = 'public, max-age=0'
+#         # response.headers.add('Content-Security-Policy', 'self')
+#         # return response
 
-@app.errorhandler(404)
-def not_found(error):
-    @after_this_request
-    def add_header(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
-        # return response
-
-    app.logger.info(error)
-    return render_template('404.html'), 404
+#     app.logger.info(error)
+#     # return render_template('404.html'), 404
+#     return error
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(debug=True)
+
