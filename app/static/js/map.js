@@ -24,7 +24,7 @@ function createMap(countryData) {
     "World Happiness Score - Data": countryData
   };
 
-  var myMap = L.map("#map", {
+    var myMap = L.map("#map", {
     center: [25, -10],
     zoom: 2,
     layers: [monomap, countryData]
@@ -80,17 +80,10 @@ function buildMap(year) {
     newLayer(data);
   
   function newLayer(data) {
-    console.log(data)
+    // console.log(data)
 
     var filteredData = data.filter(item => item.countryName != false); 
-    console.log(filteredData)
-
-    var country = filteredData.map(item => item.countryName);
-    console.log(country)
-    var rank = filteredData.map(item => item.rank);
-    console.log(rank)
-    var score = filteredData.map(item => item.score);
-    console.log(score)
+    // console.log(filteredData)
 
     function getColor(d) {
       return d > 7.11 ? '#b30000' :
@@ -112,10 +105,10 @@ function buildMap(year) {
       };
   }
 
-    var countryData = L.geoJson(filteredData, {
+    var countryData = new L.geoJson(filteredData, {
       style: style,
       onEachFeature: function(feature, layer) {
-        console.log(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${(parseFloat(feature.score).toFixed(2))}<br><strong>Rank: </strong>${feature.rank} out of ${filteredData.length}`);
+        // console.log(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${(parseFloat(feature.score).toFixed(2))}<br><strong>Rank: </strong>${feature.rank} out of ${filteredData.length}`);
         layer.bindPopup(`<h5>${feature.countryName}</h5><hr><strong>Score: </strong>${(parseFloat(feature.score).toFixed(2))}<br><strong>Rank: </strong>${feature.rank} out of ${(filteredData.length +1)}`);
       }
     });
@@ -123,8 +116,6 @@ function buildMap(year) {
   }
 });
 }
-
-// buildMap(2016);
 
 function init() {
     var dropdownMenu = d3.select("#selDataset");
@@ -136,8 +127,11 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 function optionChanged(year) {
     var dropdownMenu = d3.select("#selDataset");
     var year = dropdownMenu.property("value");
+    var myMap = d3.selectAll("#map").data()
+    d3.selectAll('#map').remove();
+    var myMap = map.enter().append('map')
     buildMap(year);
-};
+    }
 
 init();
 
