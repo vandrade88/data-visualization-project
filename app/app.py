@@ -1,30 +1,14 @@
-import os
-from flask import Flask, after_this_request, render_template, redirect, url_for, request, send_from_directory, current_app
+from flask import Flask, after_this_request, render_template, redirect, url_for, send_from_directory
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 from bson import json_util
 import simplejson as json
-from flask_cors import CORS, cross_origin
 
-# flask setup
-# root_path = os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app")
+# set up flask app
 
-# app = Flask(__name__)
-# app._static_folder = template_dir
-# app = Flask(__name__, static_url_path='')
-# template_dir = os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/static/")
-# app = Flask(__name__, template_folder=template_dir)
 app = Flask(__name__,\
-    # static_url_path='/localhost:8000/app/static',\
     static_url_path='/static',
     static_folder='static')
-    # template_folder='./app/templates')
-# app._static_folder = os.path.abspath("static/")
-# app = Flask(__name__, static_url_path="", static_folder="static")
-# (app) = Flask(__name__,\
-#     static_folder=os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/static/"), \
-#         template_folder=os.path.abspath("/Users/valerie/Desktop/data-visualization-project/app/templates"))
-# CORS(app)
 
 # mongo database setup
 app.config["MONGO_URI"] = "mongodb://localhost:27017/geojson"
@@ -38,16 +22,6 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 # flask routes
-
-# @app.route('/js/<path:path>')
-# def send_js(path):
-#     return send_from_directory('js', path)
-
-# @app.route('/static/<path:filename>')
-# def serve_static(filename):
-#     root_dir = os.path.dirname(os.getcwd())
-#     return send_from_directory(os.path.join(root_dir, 'static', 'js'), filename)
-
 
 @app.route("/", methods=['POST', 'GET'])
 def home():    
@@ -66,9 +40,6 @@ def r2020():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', 'self')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -109,9 +80,6 @@ def r2019():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -151,9 +119,6 @@ def r2018():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -191,9 +156,6 @@ def r2017():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -232,9 +194,6 @@ def r2016():
     @after_this_request
     def add_header(response):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
-        # response.headers.add('Content-Security-Policy', 'self')
         return response
 
     countries = parse_json(mongo.db.newCountries.find({}))
@@ -282,6 +241,6 @@ def r2016():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True, threaded=True)
     # app.run(debug=True)
 

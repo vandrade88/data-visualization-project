@@ -30,7 +30,6 @@ function createMap(countryData) {
     layers: [monomap, countryData]
   });
 
-  var controller =
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
@@ -69,8 +68,6 @@ function fetchData(year) {
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          // 'body': JSON.stringify(data)
-          // 'body': JSON.parse(form)
       },
   })
 //   fetch('http://127.0.0.1:5000', {method:'POST'})
@@ -86,11 +83,11 @@ function newLayer(data) {
   // console.log(filteredData)
 
   function getColor(d) {
-    return d > 7.11 ? '#b30000' :
-            d > 6 && d < 7  ? '#e34a33' :
-            d > 5 && d < 6  ? '#fc8d59' :
-            d > 4 && d < 5  ? '#fdbb84' :
-            d > 3 && d < 4  ? '#fdd49e' :
+    return d > 7.001 ? '#b30000' :
+            d > 6.000 && d < 7  ? '#e34a33' :
+            d > 5.000 && d < 6  ? '#fc8d59' :
+            d > 4.000 && d < 5  ? '#fdbb84' :
+            d > 3.000 && d < 4  ? '#fdd49e' :
                       '#fef0d9';
 }
 
@@ -120,13 +117,6 @@ function newLayer(data) {
 
 function refreshLayer(countryData) {
 
-  // if(myMap != undefined)
-  // {
-    // myMap.remove();
-  //   myMap = undefined
-  //   document.getElementById('#map').innerHTML = "";
-  // }
-
   var container = L.DomUtil.get('#map');
     if(container != null){
       container._leaflet_id = null;
@@ -155,14 +145,12 @@ function refreshLayer(countryData) {
     "World Happiness Score - Data": countryData
   };
 
-    var myMap = L.map("#map", {
+  var myMap = L.map("#map", {
     center: [25, -10],
     zoom: 2,
     layers: [monomap, countryData]
   });
 
-
-  var controller =
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
@@ -179,11 +167,8 @@ function init(year) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            // 'body': JSON.stringify(data)
-            // 'body': JSON.parse(form)
         },
     })
-//   fetch('http://127.0.0.1:5000', {method:'POST'})
   .then(response => response.json())
   .then(data => {
     // console.log(data);
@@ -197,10 +182,10 @@ function init(year) {
 
     function getColor(d) {
       return d > 7.001 ? '#b30000' :
-              d > 6 && d < 7  ? '#e34a33' :
-              d > 5 && d < 6  ? '#fc8d59' :
-              d > 4 && d < 5  ? '#fdbb84' :
-              d > 3 && d < 4  ? '#fdd49e' :
+        d > 6.000 && d < 7  ? '#e34a33' :
+        d > 5.000 && d < 6  ? '#fc8d59' :
+        d > 4.000 && d < 5  ? '#fdbb84' :
+        d > 3.000 && d < 4  ? '#fdd49e' :
                         '#fef0d9';
   }
 
