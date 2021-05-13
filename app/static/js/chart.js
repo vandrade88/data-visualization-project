@@ -56,7 +56,7 @@ function buildBarChart(year) {
 
         var data = [barTrace];
 
-        Plotly.newPlot("bar", data, layout);
+        Plotly.newPlot("#bar", data, layout);
     })
     };
 
@@ -67,7 +67,7 @@ function buildBarChart(year) {
 function init() {
     var dropdownMenu = d3.select("#selDataset");
     var year = dropdownMenu.property("value");
-        buildBarChart(year);
+    buildBarChart(year);
 };
 
 // create event handler call optionChanged when new drop down item is selected
