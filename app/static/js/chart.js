@@ -133,6 +133,7 @@ function optionChanged(year) {
     var dropdownMenu = d3.select("#selDataset");
     var year = dropdownMenu.property("value");
     buildBarChart(year);
+    fetchData(year);
     }
 
 init();
