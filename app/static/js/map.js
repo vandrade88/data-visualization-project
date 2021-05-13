@@ -35,7 +35,7 @@ function createMap(countryData) {
   }).addTo(myMap);
 
   var legend = L.control({ position: 'bottomleft' })
-legend.onAdd = function (map) {
+  legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend')
     var labels = [
         "0-3",
@@ -49,7 +49,7 @@ legend.onAdd = function (map) {
       '#fef0d9','#fdd49e','#fdbb84','#fc8d59','#e34a33','#b30000'
     ];
     var limits = [0,1,2,3,4,5];
-    var legendInfo = "<h5>Legend</h5>"
+    var legendInfo = "<h5>Score Range</h5>"
     div.innerHTML = legendInfo;
 
     limits.forEach(function(limit, index) {
@@ -85,7 +85,7 @@ function newLayer(data) {
   function getColor(d) {
     return d > 7.001 ? '#b30000' :
             d > 6.000 && d < 7  ? '#e34a33' :
-            d > 5.000 && d < 6  ? '#fc8d59' :
+            d > 5.000 && d <= 6  ? '#fc8d59' :
             d > 4.000 && d < 5  ? '#fdbb84' :
             d > 3.000 && d < 4  ? '#fdd49e' :
                       '#fef0d9';
@@ -183,7 +183,7 @@ function init(year) {
     function getColor(d) {
       return d > 7.001 ? '#b30000' :
         d > 6.000 && d < 7  ? '#e34a33' :
-        d > 5.000 && d < 6  ? '#fc8d59' :
+        d > 5.000 && d <= 6  ? '#fc8d59' :
         d > 4.000 && d < 5  ? '#fdbb84' :
         d > 3.000 && d < 4  ? '#fdd49e' :
                         '#fef0d9';
